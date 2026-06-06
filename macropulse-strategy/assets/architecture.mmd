@@ -1,0 +1,12 @@
+flowchart LR
+    A["Macro News Service"] --> B["News Signal Extractor"]
+    C["CoinMarketCap API or MCP"] --> D["CMC Market Collector"]
+    B --> E["Market Regime Classifier"]
+    D --> E
+    E --> F["Strategy Template Selector"]
+    F --> G["Strategy Spec Generator"]
+    G --> H["Schema and Risk Validator"]
+    H --> I["Replay Backtest"]
+    I --> J["Final Strategy Output"]
+    J --> K["Trust Wallet Quote-Only Plan"]
+    J --> L["BNB Agent SDK Extension"]

@@ -1,0 +1,199 @@
+strategy:
+  name: fear_rebound_bnb_dca
+  version: 1.0.0
+  template: Fear Rebound DCA
+  generated_at: '2026-06-06T11:15:54.513539+00:00'
+  objective: Create a backtestable crypto strategy specification for research and
+    agent review.
+asset_universe:
+  primary:
+  - BNB
+  - BTC
+  - ETH
+  quote_asset: USDC
+  filters:
+    min_market_cap_usd: 1000000000
+    min_24h_volume_usd: 50000000
+    require_cmc_rank_lte: 50
+    exclude_assets_with_unresolved_security_events: true
+market_regime:
+  label: extreme_fear_rebound
+  confidence: 0.707
+  selected_template: fear-rebound-dca
+  inputs:
+    fear_greed_index: 24.0
+    bnb_rsi_14: 36.4
+    btc_dominance_7d_change_pct: 0.35
+    total_market_cap_7d_change_pct: -7.4
+    macro_sentiment: 0.1379
+    risk_event_score: 0.4628
+    strongest_narrative: DeFi
+    strongest_narrative_score: 0.78
+  rules_fired:
+  - bnb_rsi_lte_42
+  - cmc_narrative_strength_gte_0_76
+  - fear_greed_lte_30
+  - news_sentiment_not_extreme_negative
+evidence:
+- source: CoinMarketCap fear and greed
+  type: sentiment
+  data:
+    value: 24
+    classification: Extreme Fear
+  interpretation: Market sentiment is used as a regime input, not as a standalone
+    trade signal.
+- source: CoinMarketCap global metrics
+  type: market_health
+  data:
+    total_market_cap_7d_change_pct: -7.4
+    btc_dominance_pct: 55.8
+    btc_dominance_7d_change_pct: 0.35
+  interpretation: Global market trend and BTC dominance affect risk appetite and template
+    selection.
+- source: CoinMarketCap quotes and technical indicators
+  type: asset_technicals
+  data:
+    BNB:
+      price_usd: 613.2
+      percent_change_7d: -6.8
+      rsi_14: 36.4
+      ema_trend: recovering_below_20d
+    BTC:
+      price_usd: 104250.0
+      percent_change_7d: -4.1
+    ETH:
+      price_usd: 3825.0
+      percent_change_7d: -5.2
+  interpretation: Large-cap crypto quotes and BNB technicals define entry filters
+    and replay assumptions.
+- source: Macro news signal extractor
+  type: news
+  data:
+    macro_sentiment: 0.1379
+    risk_event_score: 0.4628
+    dominant_topics:
+    - liquidity
+    - DeFi
+    - CPI
+    - inflation
+    - Fed
+    asset_mentions:
+    - BNB
+    - BTC
+    - ETH
+    - CAKE
+    - FET
+    narrative_tags:
+    - DeFi
+    - macro
+    - large-cap
+    - Payments
+    - AI
+  interpretation: macro tone is mixed; risk events are contained; dominant topics
+    include liquidity, DeFi, CPI.
+- source: CoinMarketCap narratives
+  type: narrative
+  data:
+    tag: DeFi
+    strength_score: 0.78
+    volume_change_24h_pct: 18.5
+    news_match_score: 0.72
+    related_assets:
+    - BNB
+    - CAKE
+    - AAVE
+    - UNI
+    cmc_trending_rank: 2
+  interpretation: Narrative strength is used only when liquidity and risk filters
+    are present.
+- source: Rule-based regime classifier
+  type: classification
+  data:
+    label: extreme_fear_rebound
+    confidence: 0.707
+    selected_template: fear-rebound-dca
+    inputs:
+      fear_greed_index: 24.0
+      bnb_rsi_14: 36.4
+      btc_dominance_7d_change_pct: 0.35
+      total_market_cap_7d_change_pct: -7.4
+      macro_sentiment: 0.1379
+      risk_event_score: 0.4628
+      strongest_narrative: DeFi
+      strongest_narrative_score: 0.78
+    rules_fired:
+    - bnb_rsi_lte_42
+    - cmc_narrative_strength_gte_0_76
+    - fear_greed_lte_30
+    - news_sentiment_not_extreme_negative
+  interpretation: Template selection is deterministic and should be validated before
+    final use.
+entry:
+  all:
+  - cmc_fear_greed_lte: 30
+  - bnb_rsi_14_lte: 40
+  - bnb_7d_change_lte_pct: -4
+  - news_macro_sentiment_gte: -0.35
+  confirmation:
+  - Use DCA only after daily close is above the prior 3-day low.
+  - Skip new entries when a fresh exchange, bridge, or chain security event is unresolved.
+position_sizing:
+  method: dca_equal_slices
+  sizing_basis: percentage_of_simulated_equity
+  max_position_pct: 20
+  allocation_per_entry_pct: 4
+  max_entries: 5
+execution:
+  mode: specification_only
+  trade_execution: disabled
+  quote_only: true
+  reference_price_usd: 613.2
+  type: dca
+  interval: 1d
+  max_entries: 5
+  allocation_per_entry_pct: 4
+  max_position_pct: 20
+  preferred_quote_asset: USDC
+exit:
+  any:
+  - cmc_fear_greed_gte: 55
+  - take_profit_pct: 12
+  - stop_loss_pct: 5
+  - bnb_rsi_14_gte: 68
+  time_stop_days: 14
+risk:
+  max_position_pct: 20
+  stop_loss_pct: 5
+  max_drawdown_pct: 8
+  max_daily_loss_pct: 2
+  fee_bps: 10
+  slippage_bps: 8
+  risk_score: medium
+  risk_notes:
+  - Fear rebound strategies can fail if macro stress accelerates.
+  - DCA entries stop immediately after the stop-loss or drawdown limit is hit.
+backtest:
+  engine: macropulse-strategy/scripts/backtest_strategy.py
+  default_ohlcv: macropulse-strategy/examples/sample-bnb-ohlcv.csv
+  window_days: 45
+  interval: 1d
+  include_fees: true
+  include_slippage: true
+  metrics_required:
+  - total_return_pct
+  - max_drawdown_pct
+  - win_rate
+  - trade_count
+  - fees_paid_pct
+  - slippage_assumption_bps
+disclaimers:
+- This is not financial advice.
+- This strategy specification is for research, simulation, and backtesting only.
+- No trades, swaps, transfers, approvals, or wallet actions are executed by this skill.
+- Human review is required before any real-world use outside this repository.
+generation_inputs:
+  news_input: macropulse-strategy/examples/sample-news-input.json
+  cmc_snapshot: macropulse-strategy/examples/sample-cmc-snapshot.json
+  demo_mode_compatible: true
+  news_item_count: 5
+  cmc_source_mode: sample

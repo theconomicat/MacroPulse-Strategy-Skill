@@ -1,0 +1,66 @@
+{
+  "source": "sample-macro-news-feed",
+  "generated_at": "2026-06-06T00:00:00Z",
+  "items": [
+    {
+      "title": "US CPI cools faster than expected while crypto liquidity remains cautious",
+      "summary": "Inflation data improved, but traders remain cautious ahead of the next Federal Reserve meeting.",
+      "published_at": "2026-06-01T13:30:00Z",
+      "source": "MacroWire",
+      "credibility_score": 0.9,
+      "sentiment": 0.18,
+      "impact_score": 0.78,
+      "tags": ["CPI", "inflation", "Fed", "liquidity"],
+      "assets": ["BTC", "ETH", "BNB"],
+      "narratives": ["macro", "large-cap"]
+    },
+    {
+      "title": "Spot ETF inflows stabilize after a week of broad crypto outflows",
+      "summary": "ETF flow data suggests that large-cap crypto demand is no longer deteriorating at last week's pace.",
+      "published_at": "2026-06-02T18:00:00Z",
+      "source": "DigitalAssetDesk",
+      "credibility_score": 0.82,
+      "sentiment": 0.32,
+      "impact_score": 0.65,
+      "tags": ["ETF inflow", "BTC", "risk appetite"],
+      "assets": ["BTC", "ETH"],
+      "narratives": ["large-cap"]
+    },
+    {
+      "title": "BNB Chain activity rebounds as DeFi volumes recover from monthly lows",
+      "summary": "BNB Chain DEX volume and active address metrics improved, led by DeFi and payments activity.",
+      "published_at": "2026-06-03T09:15:00Z",
+      "source": "ChainMetricsDaily",
+      "credibility_score": 0.78,
+      "sentiment": 0.22,
+      "impact_score": 0.58,
+      "tags": ["BNB Chain", "DeFi", "volume", "active addresses"],
+      "assets": ["BNB", "CAKE"],
+      "narratives": ["DeFi", "payments"]
+    },
+    {
+      "title": "FOMC speakers warn that policy may stay restrictive if inflation stalls",
+      "summary": "Several officials said rate cuts require more confirmation, keeping macro risk on the calendar.",
+      "published_at": "2026-06-04T16:00:00Z",
+      "source": "RatesWatch",
+      "credibility_score": 0.86,
+      "sentiment": -0.22,
+      "impact_score": 0.72,
+      "tags": ["FOMC", "rate cut", "macro risk"],
+      "assets": ["BTC", "ETH", "BNB"],
+      "narratives": ["macro"]
+    },
+    {
+      "title": "AI and DeFi tokens lead crypto social attention but liquidity filters remain important",
+      "summary": "Narrative demand improved, although analysts cautioned that smaller tokens still need liquidity and security screening.",
+      "published_at": "2026-06-05T12:20:00Z",
+      "source": "NarrativePulse",
+      "credibility_score": 0.74,
+      "sentiment": 0.28,
+      "impact_score": 0.55,
+      "tags": ["AI", "DeFi", "narrative", "liquidity"],
+      "assets": ["BNB", "FET", "AAVE", "UNI"],
+      "narratives": ["AI", "DeFi"]
+    }
+  ]
+}

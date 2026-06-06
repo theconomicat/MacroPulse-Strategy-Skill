@@ -1,0 +1,212 @@
+strategy:
+  name: risk_off_large_cap_rotation
+  version: 1.0.0
+  template: Risk-Off Rotation
+  generated_at: '2026-06-06T11:15:54.513540+00:00'
+  objective: Create a backtestable crypto strategy specification for research and
+    agent review.
+asset_universe:
+  primary:
+  - BTC
+  - ETH
+  - BNB
+  - USDC
+  quote_asset: USDC
+  filters:
+    min_market_cap_usd: 1000000000
+    min_24h_volume_usd: 50000000
+    require_cmc_rank_lte: 50
+    exclude_assets_with_unresolved_security_events: true
+  defensive_assets:
+  - USDC
+market_regime:
+  label: risk_off_rotation_overlay
+  confidence: 0.707
+  selected_template: risk-off-rotation
+  inputs:
+    fear_greed_index: 24.0
+    bnb_rsi_14: 36.4
+    btc_dominance_7d_change_pct: 0.35
+    total_market_cap_7d_change_pct: -7.4
+    macro_sentiment: 0.1379
+    risk_event_score: 0.4628
+    strongest_narrative: DeFi
+    strongest_narrative_score: 0.78
+  rules_fired:
+  - bnb_rsi_lte_42
+  - cmc_narrative_strength_gte_0_76
+  - fear_greed_lte_30
+  - news_sentiment_not_extreme_negative
+  - template_forced_risk_off_rotation
+  template_selection_mode: forced_by_cli
+evidence:
+- source: CoinMarketCap fear and greed
+  type: sentiment
+  data:
+    value: 24
+    classification: Extreme Fear
+  interpretation: Market sentiment is used as a regime input, not as a standalone
+    trade signal.
+- source: CoinMarketCap global metrics
+  type: market_health
+  data:
+    total_market_cap_7d_change_pct: -7.4
+    btc_dominance_pct: 55.8
+    btc_dominance_7d_change_pct: 0.35
+  interpretation: Global market trend and BTC dominance affect risk appetite and template
+    selection.
+- source: CoinMarketCap quotes and technical indicators
+  type: asset_technicals
+  data:
+    BNB:
+      price_usd: 613.2
+      percent_change_7d: -6.8
+      rsi_14: 36.4
+      ema_trend: recovering_below_20d
+    BTC:
+      price_usd: 104250.0
+      percent_change_7d: -4.1
+    ETH:
+      price_usd: 3825.0
+      percent_change_7d: -5.2
+  interpretation: Large-cap crypto quotes and BNB technicals define entry filters
+    and replay assumptions.
+- source: Macro news signal extractor
+  type: news
+  data:
+    macro_sentiment: 0.1379
+    risk_event_score: 0.4628
+    dominant_topics:
+    - liquidity
+    - DeFi
+    - CPI
+    - inflation
+    - Fed
+    asset_mentions:
+    - BNB
+    - BTC
+    - ETH
+    - CAKE
+    - FET
+    narrative_tags:
+    - DeFi
+    - macro
+    - large-cap
+    - Payments
+    - AI
+  interpretation: macro tone is mixed; risk events are contained; dominant topics
+    include liquidity, DeFi, CPI.
+- source: CoinMarketCap narratives
+  type: narrative
+  data:
+    tag: DeFi
+    strength_score: 0.78
+    volume_change_24h_pct: 18.5
+    news_match_score: 0.72
+    related_assets:
+    - BNB
+    - CAKE
+    - AAVE
+    - UNI
+    cmc_trending_rank: 2
+  interpretation: Narrative strength is used only when liquidity and risk filters
+    are present.
+- source: Rule-based regime classifier
+  type: classification
+  data:
+    label: risk_off_rotation_overlay
+    confidence: 0.707
+    selected_template: risk-off-rotation
+    inputs:
+      fear_greed_index: 24.0
+      bnb_rsi_14: 36.4
+      btc_dominance_7d_change_pct: 0.35
+      total_market_cap_7d_change_pct: -7.4
+      macro_sentiment: 0.1379
+      risk_event_score: 0.4628
+      strongest_narrative: DeFi
+      strongest_narrative_score: 0.78
+    rules_fired:
+    - bnb_rsi_lte_42
+    - cmc_narrative_strength_gte_0_76
+    - fear_greed_lte_30
+    - news_sentiment_not_extreme_negative
+    - template_forced_risk_off_rotation
+    template_selection_mode: forced_by_cli
+  interpretation: Template selection is deterministic and should be validated before
+    final use.
+entry:
+  all:
+  - news_risk_event_score_gte: 0.45
+  - btc_dominance_7d_change_gte_pct: 0.3
+  - new_altcoin_entries_allowed: false
+  rotation_targets:
+    USDC: 60
+    BTC: 25
+    ETH: 10
+    BNB: 5
+position_sizing:
+  method: defensive_rotation_targets
+  sizing_basis: percentage_of_simulated_equity
+  max_position_pct: 10
+  target_allocations_pct:
+    USDC: 60
+    BTC: 25
+    ETH: 10
+    BNB: 5
+execution:
+  mode: specification_only
+  trade_execution: disabled
+  quote_only: true
+  reference_price_usd: 613.2
+  type: rotation
+  rebalance_interval: 1d
+  max_entries: 3
+  allocation_per_entry_pct: 3
+  max_position_pct: 10
+  preferred_quote_asset: USDC
+exit:
+  any:
+  - news_risk_event_score_lte: 0.4
+  - cmc_fear_greed_gte: 45
+  - stop_loss_pct: 4.5
+  - max_holding_days: 10
+  risk_on_reentry_requires:
+  - btc_dominance_stabilizes
+  - news_sentiment_above_-0.15
+risk:
+  max_position_pct: 10
+  stop_loss_pct: 4.5
+  max_drawdown_pct: 5
+  max_daily_loss_pct: 1.5
+  fee_bps: 10
+  slippage_bps: 6
+  risk_score: low_medium
+  risk_notes:
+  - This template prioritizes capital preservation over return seeking.
+  - It blocks new illiquid altcoin exposure while macro event risk is elevated.
+backtest:
+  engine: macropulse-strategy/scripts/backtest_strategy.py
+  default_ohlcv: macropulse-strategy/examples/sample-bnb-ohlcv.csv
+  window_days: 45
+  interval: 1d
+  include_fees: true
+  include_slippage: true
+  metrics_required:
+  - total_return_pct
+  - max_drawdown_pct
+  - win_rate
+  - trade_count
+  - fees_paid_pct
+  - slippage_assumption_bps
+disclaimers:
+- This is not financial advice.
+- This strategy specification is for research, simulation, and backtesting only.
+- No trades, swaps, transfers, approvals, or wallet actions are executed by this skill.
+- Human review is required before any real-world use outside this repository.
+generation_inputs:
+  news_input: macropulse-strategy/examples/sample-news-input.json
+  cmc_snapshot: macropulse-strategy/examples/sample-cmc-snapshot.json
+  demo_mode_compatible: true
+  news_item_count: 5
+  cmc_source_mode: sample
