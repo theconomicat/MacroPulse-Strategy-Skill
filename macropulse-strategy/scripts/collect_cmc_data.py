@@ -50,10 +50,14 @@ def cmc_get(path: str, api_key: str, params: dict[str, str]) -> dict[str, Any]:
 def normalize_quote_payload(payload: dict[str, Any]) -> dict[str, Any]:
     result: dict[str, Any] = {}
     data = payload.get("data", {})
-    if not isinstance(data, dict):
+    if isinstance(data, list):
+        iterable_data: list[tuple[str, Any]] = [(str(item.get("symbol", "")), item) for item in data if isinstance(item, dict)]
+    elif isinstance(data, dict):
+        iterable_data = list(data.items())
+    else:
         return result
 
-    for symbol_or_id, quote_data in data.items():
+    for symbol_or_id, quote_data in iterable_data:
         if isinstance(quote_data, list):
             candidates = quote_data
         else:
@@ -63,6 +67,14 @@ def normalize_quote_payload(payload: dict[str, Any]) -> dict[str, Any]:
                 continue
             symbol = str(candidate.get("symbol", symbol_or_id)).upper()
             usd = candidate.get("quote", {}).get("USD", {})
+            if usd.get("price") is None and symbol in result:
+                continue
+            existing = result.get(symbol)
+            if existing:
+                existing_rank = existing.get("cmc_rank")
+                new_rank = candidate.get("cmc_rank")
+                if existing_rank is not None and new_rank is not None and float(new_rank) > float(existing_rank):
+                    continue
             result[symbol] = {
                 "price_usd": usd.get("price"),
                 "percent_change_24h": usd.get("percent_change_24h"),
@@ -143,7 +155,7 @@ def collect_live_snapshot(api_key: str, assets: list[str], include: set[str]) ->
     if "quotes" in include:
         try:
             symbols = ",".join(assets)
-            payload = cmc_get("/v3/cryptocurrency/quotes/latest", api_key, {"symbol": symbols, "convert": "USD"})
+            payload = cmc_get("/v2/cryptocurrency/quotes/latest", api_key, {"symbol": symbols, "convert": "USD"})
             snapshot["quotes"] = normalize_quote_payload(payload)
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
             errors.append(f"Quotes request failed: {exc}")

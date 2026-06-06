@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">MacroPulse Strategy Skill architecture</title>
+  <desc id="desc">Flow from CoinMarketCap Agent Hub and macro news into strategy generation, validation, replay, and safe integration artifacts.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#101820"/>
+      <stop offset="55%" stop-color="#17212b"/>
+      <stop offset="100%" stop-color="#0d141b"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 34px Inter, Arial, sans-serif; fill: #f7fafc; }
+      .subtitle { font: 400 16px Inter, Arial, sans-serif; fill: #b7c3cf; }
+      .box-title { font: 700 17px Inter, Arial, sans-serif; fill: #f7fafc; }
+      .box-copy { font: 400 13px Inter, Arial, sans-serif; fill: #cfd8e3; }
+      .label { font: 700 12px Inter, Arial, sans-serif; fill: #0f1720; }
+      .box { rx: 12; stroke-width: 1.4; }
+      .arrow { fill: none; stroke: #e8eef5; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); opacity: .9; }
+      .muted-arrow { fill: none; stroke: #7d8c9b; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-muted); opacity: .85; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#e8eef5"/>
+    </marker>
+    <marker id="arrow-muted" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#7d8c9b"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <text x="64" y="72" class="title">MacroPulse Strategy Skill</text>
+  <text x="64" y="102" class="subtitle">Agent Skill for CMC-powered, validated, backtestable crypto strategy specs</text>
+
+  <rect x="64" y="152" width="246" height="118" class="box" fill="#243746" stroke="#5cc8ff"/>
+  <text x="88" y="188" class="box-title">CMC Agent Hub</text>
+  <text x="88" y="214" class="box-copy">MCP, REST, Skills Marketplace</text>
+  <text x="88" y="237" class="box-copy">Fear/greed, quotes, technicals</text>
+  <text x="88" y="260" class="box-copy">Narratives, derivatives, on-chain</text>
+
+  <rect x="64" y="318" width="246" height="94" class="box" fill="#2a3044" stroke="#8bd17c"/>
+  <text x="88" y="354" class="box-title">Macro News Adapter</text>
+  <text x="88" y="380" class="box-copy">Sentiment, topics, risk events</text>
+  <text x="88" y="403" class="box-copy">Asset and narrative mentions</text>
+
+  <rect x="382" y="220" width="220" height="132" class="box" fill="#293643" stroke="#ffcf5a"/>
+  <text x="410" y="258" class="box-title">Signal Normalizer</text>
+  <text x="410" y="285" class="box-copy">Agent-ready market snapshot</text>
+  <text x="410" y="308" class="box-copy">Evidence categories</text>
+  <text x="410" y="331" class="box-copy">Risk context</text>
+
+  <rect x="670" y="150" width="232" height="118" class="box" fill="#2d3348" stroke="#f39c6b"/>
+  <text x="698" y="188" class="box-title">Regime Classifier</text>
+  <text x="698" y="214" class="box-copy">Extreme fear rebound</text>
+  <text x="698" y="237" class="box-copy">Risk-off pressure</text>
+  <text x="698" y="260" class="box-copy">Narrative momentum</text>
+
+  <rect x="670" y="318" width="232" height="118" class="box" fill="#2f3a32" stroke="#7ed7a5"/>
+  <text x="698" y="356" class="box-title">Strategy Compiler</text>
+  <text x="698" y="382" class="box-copy">YAML/JSON strategy spec</text>
+  <text x="698" y="405" class="box-copy">Entry, sizing, exit, risk</text>
+  <text x="698" y="428" class="box-copy">Evidence and disclaimers</text>
+
+  <rect x="974" y="122" width="242" height="92" class="box" fill="#33404a" stroke="#f4f7fb"/>
+  <text x="1002" y="158" class="box-title">Validator</text>
+  <text x="1002" y="184" class="box-copy">Schema, evidence, risk limits</text>
+  <text x="1002" y="207" class="box-copy">Reject before final output</text>
+
+  <rect x="974" y="248" width="242" height="92" class="box" fill="#3a3048" stroke="#cba6ff"/>
+  <text x="1002" y="284" class="box-title">Replay Backtest</text>
+  <text x="1002" y="310" class="box-copy">Daily OHLCV, fees, slippage</text>
+  <text x="1002" y="333" class="box-copy">Return, drawdown, win rate</text>
+
+  <rect x="974" y="374" width="242" height="118" class="box" fill="#3c3128" stroke="#ffb86b"/>
+  <text x="1002" y="410" class="box-title">Safe Extensions</text>
+  <text x="1002" y="436" class="box-copy">TWAK quote-only plan</text>
+  <text x="1002" y="459" class="box-copy">x402 data budget plan</text>
+  <text x="1002" y="482" class="box-copy">BNB Agent SDK manifest</text>
+
+  <rect x="438" y="520" width="398" height="78" rx="12" fill="#f7fafc"/>
+  <text x="468" y="552" class="label">Output: backtestable strategy spec, not financial advice</text>
+  <text x="468" y="579" style="font: 400 14px Inter, Arial, sans-serif; fill: #334155;">No private keys, no wallet signing, no live trade execution</text>
+
+  <path class="arrow" d="M310 211 C342 211 348 258 382 258"/>
+  <path class="arrow" d="M310 365 C344 365 348 318 382 318"/>
+  <path class="arrow" d="M602 286 C632 286 638 209 670 209"/>
+  <path class="arrow" d="M786 268 L786 318"/>
+  <path class="arrow" d="M902 377 C932 377 940 168 974 168"/>
+  <path class="arrow" d="M1095 214 L1095 248"/>
+  <path class="arrow" d="M1095 340 L1095 374"/>
+  <path class="muted-arrow" d="M786 436 C786 486 724 520 676 520"/>
+  <path class="muted-arrow" d="M974 433 C910 433 868 520 836 552"/>
+</svg>

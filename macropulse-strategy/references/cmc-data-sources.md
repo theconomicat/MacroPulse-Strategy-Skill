@@ -46,7 +46,7 @@ The lightweight collector attempts these CoinMarketCap REST resources:
 
 - Fear and Greed latest: `/v3/fear-and-greed/latest`
 - Global metrics: `/v1/global-metrics/quotes/latest`
-- Quotes: `/v3/cryptocurrency/quotes/latest`
+- Quotes: `/v2/cryptocurrency/quotes/latest`
 
 If a request fails, the script prints clear collector errors and falls back to the sample snapshot when no live data is usable.
 

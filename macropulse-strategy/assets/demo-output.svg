@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">MacroPulse demo output artifacts</title>
+  <desc id="desc">Judge demo output showing generated artifacts, validation status, replay metrics, and sponsor integration plans.</desc>
+  <defs>
+    <style>
+      .title { font: 700 34px Inter, Arial, sans-serif; fill: #0f1720; }
+      .subtitle { font: 400 16px Inter, Arial, sans-serif; fill: #51606f; }
+      .card-title { font: 700 18px Inter, Arial, sans-serif; fill: #0f1720; }
+      .copy { font: 400 14px Inter, Arial, sans-serif; fill: #435160; }
+      .mono { font: 500 13px SFMono-Regular, Consolas, monospace; fill: #22313f; }
+      .metric { font: 700 30px Inter, Arial, sans-serif; fill: #0f1720; }
+      .label { font: 700 12px Inter, Arial, sans-serif; fill: #5f6f7e; text-transform: uppercase; }
+    </style>
+  </defs>
+  <rect width="1280" height="720" fill="#f4f7fb"/>
+  <text x="64" y="72" class="title">One-command judge demo</text>
+  <text x="64" y="104" class="subtitle">./demo/run_demo.sh /tmp/macropulse-demo produces every artifact needed to inspect the Track 2 skill.</text>
+
+  <rect x="64" y="142" width="520" height="204" rx="14" fill="#ffffff" stroke="#d9e2ec"/>
+  <text x="94" y="180" class="card-title">Generated artifacts</text>
+  <text x="94" y="212" class="mono">cmc-agent-hub-plan.json</text>
+  <text x="94" y="238" class="mono">fear-rebound.yaml</text>
+  <text x="94" y="264" class="mono">validation.txt</text>
+  <text x="94" y="290" class="mono">backtest.json</text>
+  <text x="94" y="316" class="mono">twak-quote-plan.txt</text>
+  <text x="332" y="212" class="mono">x402-data-plan.json</text>
+  <text x="332" y="238" class="mono">bnb-agent-manifest.json</text>
+  <text x="332" y="264" class="mono">cmc-snapshot.json</text>
+  <text x="332" y="290" class="mono">news-signals.json</text>
+
+  <rect x="640" y="142" width="576" height="204" rx="14" fill="#ffffff" stroke="#d9e2ec"/>
+  <text x="670" y="180" class="card-title">Replay metrics from sample BNB OHLCV</text>
+  <text x="670" y="230" class="label">total return</text>
+  <text x="670" y="268" class="metric">3.2781%</text>
+  <text x="846" y="230" class="label">max drawdown</text>
+  <text x="846" y="268" class="metric">0.2187%</text>
+  <text x="1048" y="230" class="label">win rate</text>
+  <text x="1048" y="268" class="metric">1.00</text>
+  <text x="670" y="318" class="copy">Fees and slippage are deducted from simulated cash flows.</text>
+
+  <rect x="64" y="388" width="350" height="194" rx="14" fill="#ffffff" stroke="#a7d8ff"/>
+  <text x="94" y="426" class="card-title">CMC Agent Hub plan</text>
+  <text x="94" y="458" class="copy">MCP endpoint and REST fallback</text>
+  <text x="94" y="482" class="copy">Skills Marketplace routing</text>
+  <text x="94" y="506" class="copy">x402 plan-only data path</text>
+  <text x="94" y="542" class="mono">live probe: initialize + tools/list</text>
+
+  <rect x="464" y="388" width="350" height="194" rx="14" fill="#ffffff" stroke="#b5e3b5"/>
+  <text x="494" y="426" class="card-title">Validated strategy spec</text>
+  <text x="494" y="458" class="copy">entry, position sizing, exit</text>
+  <text x="494" y="482" class="copy">max_position, stop_loss, drawdown</text>
+  <text x="494" y="506" class="copy">8 evidence categories</text>
+  <text x="494" y="542" class="mono">validation: passed</text>
+
+  <rect x="864" y="388" width="352" height="194" rx="14" fill="#ffffff" stroke="#ffd39b"/>
+  <text x="894" y="426" class="card-title">Execution-safe extensions</text>
+  <text x="894" y="458" class="copy">TWAK quote-only commands</text>
+  <text x="894" y="482" class="copy">x402 no-payment budget plan</text>
+  <text x="894" y="506" class="copy">BNB Agent SDK manifest only</text>
+  <text x="894" y="542" class="mono">no signing, no trade execution</text>
+
+  <rect x="64" y="626" width="1152" height="44" rx="10" fill="#0f1720"/>
+  <text x="94" y="654" style="font: 600 15px Inter, Arial, sans-serif; fill: #f7fafc;">MacroPulse turns CMC market intelligence into a validated strategy deliverable for AI agents.</text>
+</svg>

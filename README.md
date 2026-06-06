@@ -17,6 +17,14 @@ MacroPulse helps an AI agent produce a machine-readable YAML or JSON strategy sp
 
 The default demo runs without API keys.
 
+## Visual Assets
+
+![MacroPulse architecture](macropulse-strategy/assets/architecture.svg)
+
+![MacroPulse demo output](macropulse-strategy/assets/demo-output.svg)
+
+![MacroPulse strategy spec preview](macropulse-strategy/assets/strategy-spec-preview.svg)
+
 ## Why This Exists
 
 Most crypto agent demos jump from data to a natural-language recommendation. MacroPulse takes a stricter path:
