@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Create a CoinMarketCap Agent Hub integration plan for MacroPulse.
 
-The script is intentionally safe by default: demo mode creates a reproducible
-MCP/x402/Skills routing plan without calling paid or authenticated services.
-When an API key is present, --check-live attempts a minimal MCP initialization
-and tools/list probe so reviewers can see the live integration path.
+The script is intentionally safe by default: it creates a reproducible
+MCP/x402/Skills routing plan without signing payments or executing wallet
+actions. When an API key is present, --check-live attempts a minimal MCP
+initialization and tools/list probe so reviewers can see the live integration
+path.
 """
 
 from __future__ import annotations
@@ -76,8 +77,8 @@ OFFICIAL_TOOL_CATEGORIES = [
         "strategy_fields": ["asset_universe", "risk"],
     },
     {
-        "category": "historical_ohlcv",
-        "macro_pulse_use": "Replay/backtest input and walk-forward validation.",
+        "category": "quote_performance_replay",
+        "macro_pulse_use": "Replay/backtest input from live CMC quote performance horizons.",
         "strategy_fields": ["backtest"],
     },
     {
@@ -130,10 +131,11 @@ def build_plan(live_status: dict[str, Any] | None = None) -> dict[str, Any]:
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "integration": "CoinMarketCap Agent Hub",
-        "purpose": "Route CMC MCP, REST, Skills, and x402 data into MacroPulse strategy specs.",
+            "purpose": "Route CMC MCP, Skills, and x402 data access patterns into MacroPulse strategy specs.",
         "official_capabilities_targeted": {
             "mcp_server": CMC_MCP_URL,
             "rest_base_url": CMC_REST_URL,
+            "rest_status": "documented_for_extension_not_used_by_live_collector",
             "skills_marketplace": "https://coinmarketcap.com/api/skills-marketplace/",
             "x402": {
                 "supported": True,
@@ -155,7 +157,7 @@ def build_plan(live_status: dict[str, Any] | None = None) -> dict[str, Any]:
         "macro_pulse_tool_routing": OFFICIAL_TOOL_CATEGORIES,
         "agent_hub_workflow": [
             "Use CMC MCP or Skills Marketplace routing for real-time structured market context.",
-            "Normalize quotes, technicals, fear/greed, narratives, derivatives, on-chain, news, and DEX security into a snapshot.",
+            "Normalize quotes, technicals, fear/greed, narratives, derivatives, on-chain metrics, latest news, and macro events into a snapshot.",
             "Generate a deterministic strategy spec with evidence and risk limits.",
             "Validate schema/risk before any final answer.",
             "Run lightweight replay or attach a held-out backtest report.",

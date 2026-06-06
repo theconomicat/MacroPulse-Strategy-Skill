@@ -1,0 +1,26 @@
+Trust Wallet Agent Kit quote-only plan for live_cmc_fear_rebound_dca
+Template: Fear Rebound DCA
+
+Runtime surfaces:
+- Trust Wallet Agent SDK CLI: npx @trustwallet/cli --version
+- Trust Wallet MCP/REST can be used by an agent runtime after user-controlled authentication.
+- MacroPulse only emits quote and alert intent; it never signs.
+
+Safety model:
+- This script does not execute swaps, transfers, approvals, or wallet actions.
+- Every command below is quote-only or alert-only.
+- A human must review the strategy, quote, route, fees, slippage, wallet state, and risk limits before any separate execution workflow.
+- User approval must happen outside this skill and after validation/backtest review.
+
+Suggested TWAK commands:
+npx @trustwallet/cli --version
+twak price BNB
+twak swap 100 USDC BNB --quote-only
+twak alert create --token BNB --above 641.2657
+twak alert create --token BNB --below 543.9307
+
+Approval checklist:
+- Confirm the strategy validator passed.
+- Confirm replay metrics are acceptable for the intended research window.
+- Confirm max_position_pct, stop_loss_pct, and max_drawdown_pct are understood.
+- Confirm the quote-only route does not imply permission to execute.

@@ -21,7 +21,7 @@ MacroPulse never loads wallet credentials, never signs transactions, and never c
 
 ## BNB Agent SDK
 
-BNBAgent SDK supports:
+BNB Agent SDK supports:
 
 - ERC-8004 agent identity metadata
 - ERC-8183 agentic commerce deliverables

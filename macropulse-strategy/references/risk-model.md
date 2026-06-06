@@ -1,13 +1,13 @@
 # Risk Model
 
-MacroPulse strategies are research specifications. Risk limits are mandatory because the output is intended for validation and backtesting, not discretionary advice.
+MacroPulse strategies are research specifications. Risk limits are mandatory because the output is intended for validation and replay, not discretionary advice.
 
 ## Required Limits
 
 | Field | Meaning |
 |---|---|
-| `max_position_pct` | Maximum portfolio allocation allowed for the strategy or asset. |
-| `stop_loss_pct` | Price-based loss threshold used by strategy and replay. |
+| `max_position_pct` | Maximum simulated portfolio allocation allowed for the strategy or asset. |
+| `stop_loss_pct` | Price-based loss threshold used by the strategy spec and replay. |
 | `max_drawdown_pct` | Maximum tolerated strategy drawdown before the spec should be rejected or revised. |
 
 The validator fails if any required risk field is missing or non-positive.
@@ -17,14 +17,14 @@ The validator fails if any required risk field is missing or non-positive.
 Fear Rebound DCA:
 
 - Uses small repeated entries.
-- Default sample setting: 4% per entry, 20% maximum position.
+- Typical setting: 4% per entry, 20% maximum position.
 - Stops adding after max entries, stop-loss, or drawdown breach.
 
 Risk-Off Rotation:
 
 - Caps volatile asset exposure.
 - Keeps defensive stablecoin allocation in the spec.
-- Blocks new illiquid altcoin entries during elevated macro risk.
+- Blocks new illiquid altcoin entries during elevated risk.
 
 Narrative Momentum:
 
@@ -36,8 +36,8 @@ Narrative Momentum:
 
 Replay includes:
 
-- `fee_bps`: charged on simulated buys and sells.
-- `slippage_bps`: applied to the effective buy or sell price.
+- `fee_bps`: charged on simulated entry and exit.
+- `slippage_bps`: applied to the effective entry and exit prices.
 
 Example:
 
@@ -49,12 +49,23 @@ risk:
 
 These are assumptions for lightweight validation. Production analysis should use venue-specific quotes, route depth, spread, and execution logs.
 
+## CMC MCP Replay
+
+`scripts/backtest_strategy.py` uses CMC MCP quote performance horizons from `get_crypto_quotes_latest`.
+
+The replay:
+
+- Applies the strategy's maximum position percentage.
+- Deducts round-trip fee and slippage assumptions.
+- Reports total return, max drawdown, win rate, trade count, fees paid, and slippage assumption.
+- Does not place orders or simulate exchange order-book depth.
+
 ## Drawdown
 
-The replay script calculates max drawdown from the simulated equity curve:
+The replay derives drawdown from the worst net weighted horizon return:
 
 ```text
-drawdown = (peak_equity - current_equity) / peak_equity
+max_drawdown_pct = abs(min(net_strategy_return_pct))
 ```
 
 The strategy should be revised if replay drawdown exceeds `risk.max_drawdown_pct`.

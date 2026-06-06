@@ -1,0 +1,62 @@
+{
+  "strategy_name": "live_cmc_fear_rebound_dca",
+  "mode": "cmc_mcp_performance_replay",
+  "snapshot_time": "2026-06-06T12:41:06.964636+00:00",
+  "focus_asset": "BNB",
+  "total_return_pct": -0.4658,
+  "max_drawdown_pct": 3.3187,
+  "win_rate": 0.0,
+  "trade_count": 6,
+  "fees_paid_pct": 0.2,
+  "slippage_assumption_bps": 8.0,
+  "fee_assumption_bps": 10.0,
+  "horizon_results": [
+    {
+      "horizon": "1h",
+      "cmc_field": "percent_change_1h",
+      "asset_return_pct": -0.5292,
+      "position_weight_pct": 20.0,
+      "net_strategy_return_pct": -0.4658
+    },
+    {
+      "horizon": "24h",
+      "cmc_field": "percent_change_24h",
+      "asset_return_pct": -2.9637,
+      "position_weight_pct": 20.0,
+      "net_strategy_return_pct": -0.9527
+    },
+    {
+      "horizon": "7d",
+      "cmc_field": "percent_change_7d",
+      "asset_return_pct": -14.7937,
+      "position_weight_pct": 20.0,
+      "net_strategy_return_pct": -3.3187
+    },
+    {
+      "horizon": "30d",
+      "cmc_field": "percent_change_30d",
+      "asset_return_pct": -11.8575,
+      "position_weight_pct": 20.0,
+      "net_strategy_return_pct": -2.7315
+    },
+    {
+      "horizon": "60d",
+      "cmc_field": "percent_change_60d",
+      "asset_return_pct": -4.0181,
+      "position_weight_pct": 20.0,
+      "net_strategy_return_pct": -1.1636
+    },
+    {
+      "horizon": "90d",
+      "cmc_field": "percent_change_90d",
+      "asset_return_pct": -7.6108,
+      "position_weight_pct": 20.0,
+      "net_strategy_return_pct": -1.8822
+    }
+  ],
+  "notes": [
+    "This replay uses live CMC MCP quote performance horizons.",
+    "It is a lightweight validation replay for strategy specs, not a production quant engine.",
+    "No live orders, wallet actions, signing, or transaction execution are performed."
+  ]
+}

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-06T11:36:40.211251+00:00",
-  "strategy_name": "fear_rebound_bnb_dca",
+  "generated_at": "2026-06-06T12:41:07.781476+00:00",
+  "strategy_name": "live_cmc_fear_rebound_dca",
   "mode": "plan_only_no_payment",
   "x402_context": {
     "purpose": "Use CMC x402 pay-per-request data access when an agent has USDC on Base and no CMC API key.",

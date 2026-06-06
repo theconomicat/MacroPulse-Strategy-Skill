@@ -7,22 +7,30 @@ OUT_DIR="${1:-/tmp/macropulse-demo}"
 
 mkdir -p "$OUT_DIR"
 
+if [ -f "$ROOT_DIR/.env" ]; then
+  set -a
+  . "$ROOT_DIR/.env"
+  set +a
+fi
+
 echo "MacroPulse demo output directory: $OUT_DIR"
 echo "Using Python: $("$PYTHON_BIN" --version)"
+if [ -n "${CMC_MCP_API_KEY:-}${CMC_API_KEY:-}" ]; then
+  echo "CMC MCP key present: yes"
+else
+  echo "CMC MCP key present: no"
+fi
 
 "$PYTHON_BIN" "$ROOT_DIR/macropulse-strategy/scripts/cmc_agent_hub_plan.py" \
+  --check-live \
   --output "$OUT_DIR/cmc-agent-hub-plan.json"
 
 "$PYTHON_BIN" "$ROOT_DIR/macropulse-strategy/scripts/collect_cmc_data.py" \
-  --demo \
+  --assets BNB,BTC,ETH \
+  --primary BNB \
   --output "$OUT_DIR/cmc-snapshot.json"
 
-"$PYTHON_BIN" "$ROOT_DIR/macropulse-strategy/scripts/extract_news_signals.py" \
-  --source sample \
-  --output "$OUT_DIR/news-signals.json"
-
 "$PYTHON_BIN" "$ROOT_DIR/macropulse-strategy/scripts/generate_strategy.py" \
-  --input "$ROOT_DIR/macropulse-strategy/examples/sample-news-input.json" \
   --cmc-snapshot "$OUT_DIR/cmc-snapshot.json" \
   --output "$OUT_DIR/fear-rebound.yaml"
 
@@ -32,7 +40,7 @@ echo "Using Python: $("$PYTHON_BIN" --version)"
 
 "$PYTHON_BIN" "$ROOT_DIR/macropulse-strategy/scripts/backtest_strategy.py" \
   --strategy "$OUT_DIR/fear-rebound.yaml" \
-  --demo \
+  --cmc-snapshot "$OUT_DIR/cmc-snapshot.json" \
   --output "$OUT_DIR/backtest.json"
 
 "$PYTHON_BIN" "$ROOT_DIR/macropulse-strategy/scripts/twak_quote_plan.py" \

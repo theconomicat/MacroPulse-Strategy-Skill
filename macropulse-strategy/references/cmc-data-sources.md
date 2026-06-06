@@ -1,122 +1,99 @@
-# CoinMarketCap Data Sources
+# CoinMarketCap MCP Data Sources
 
-MacroPulse is designed to use CoinMarketCap data through live REST calls, CoinMarketCap AI Agent Hub/MCP sources, x402 plan mode, or bundled sample snapshots.
+MacroPulse uses live CoinMarketCap MCP as the primary data source. The collector requires `CMC_MCP_API_KEY` or `CMC_API_KEY` and does not use offline snapshots.
 
-For Agent Hub-specific MCP, Skills Marketplace, and x402 routing, see `cmc-agent-hub-integration.md`.
-
-## Demo Mode
-
-Demo mode reads:
+Official CMC MCP endpoint:
 
 ```text
-macropulse-strategy/examples/sample-cmc-snapshot.json
+https://mcp.coinmarketcap.com/mcp
 ```
 
-This file includes:
-
-- Agent Hub routing metadata for MCP, REST, Skills Marketplace, and x402 plan mode.
-- Fear and Greed latest value.
-- Global market metrics.
-- BNB, BTC, and ETH quotes.
-- Technical indicator examples such as RSI and EMA trend.
-- Trending narrative examples and related assets.
-- Macro event annotations.
-- Derivatives, on-chain, and DEX security/liquidity examples.
-
-Demo mode requires no API key.
-
-## Live REST Mode
-
-Set:
+## Environment
 
 ```bash
-export CMC_API_KEY="your_key_here"
+export CMC_MCP_API_KEY="your_key_here"
 ```
 
-Then run:
+`CMC_API_KEY` is also accepted for convenience. Never commit either variable.
+
+## Live Collection
 
 ```bash
-python macropulse-strategy/scripts/collect_cmc_data.py \
+python3 macropulse-strategy/scripts/collect_cmc_data.py \
   --assets BNB,BTC,ETH \
-  --include fear-greed,global,quotes,technicals,narratives \
-  --output /tmp/cmc-live.json
+  --primary BNB \
+  --news-limit 5 \
+  --output /tmp/live-cmc.json
 ```
 
-The lightweight collector attempts these CoinMarketCap REST resources:
+The collector performs:
 
-- Fear and Greed latest: `/v3/fear-and-greed/latest`
-- Global metrics: `/v1/global-metrics/quotes/latest`
-- Quotes: `/v2/cryptocurrency/quotes/latest`
+1. `initialize`
+2. `tools/list`
+3. Validation that all expected CMC MCP tools are available
+4. Live tool calls
+5. Normalization into one agent-readable market snapshot
 
-If a request fails, the script prints clear collector errors and falls back to the sample snapshot when no live data is usable.
+## CMC MCP Tools Used
 
-## AI Agent Hub / MCP Extension
+MacroPulse currently uses every CMC MCP tool exposed by the live server:
 
-For richer agent deployments, connect the CoinMarketCap AI Agent Hub or CMC MCP server to add:
+| Tool | MacroPulse Use |
+|---|---|
+| `search_cryptos` | Resolve asset symbols into CMC IDs. |
+| `get_crypto_quotes_latest` | Price, market cap, volume, and performance horizons for BNB/BTC/ETH. |
+| `get_crypto_info` | Primary asset metadata, descriptions, tags, and links. |
+| `get_crypto_metrics` | Primary asset holder and address metrics. |
+| `get_crypto_technical_analysis` | RSI, MACD, moving averages, pivots, and Fibonacci levels. |
+| `get_crypto_latest_news` | Recent CMC news for the primary asset. |
+| `search_crypto_info` | Semantic concept search for adoption, utility, and risk context. |
+| `get_global_metrics_latest` | Global market cap, liquidity, dominance, fear/greed, and TradFi flow context. |
+| `get_global_crypto_derivatives_metrics` | Funding, open interest, and liquidation risk context. |
+| `get_upcoming_macro_events` | Macro calendar events and market catalysts. |
+| `trending_crypto_narratives` | Narrative momentum and sector attention. |
+| `get_crypto_marketcap_technical_analysis` | Market-wide technical context. |
 
-- Historical Fear and Greed.
-- Historical OHLCV and quotes.
-- Market cap technical analysis.
-- Crypto technical analysis.
-- Trending narratives.
-- Macro events.
-- DEX liquidity and security data.
+## Normalized Snapshot Fields
 
-The strategy schema does not depend on one transport. Live API, MCP, and sample snapshots normalize into the same fields consumed by the generator.
-
-Generate the Agent Hub integration plan:
-
-```bash
-python macropulse-strategy/scripts/cmc_agent_hub_plan.py --output /tmp/cmc-agent-hub-plan.json
-```
-
-Probe the MCP server when a key is available:
-
-```bash
-export CMC_MCP_API_KEY="..."
-python macropulse-strategy/scripts/cmc_agent_hub_plan.py --check-live
-```
-
-## Required Normalized Fields
+The collector writes a JSON object with these major fields:
 
 ```json
 {
-  "fear_greed": {
-    "value": 24,
-    "value_classification": "Extreme Fear"
+  "source_mode": "live_cmc_mcp",
+  "mcp": {
+    "tools_used": ["search_cryptos", "get_crypto_quotes_latest"]
   },
-  "global_metrics": {
-    "total_market_cap_7d_change_pct": -7.4,
-    "btc_dominance_pct": 55.8,
-    "btc_dominance_7d_change_pct": 0.35
-  },
-  "quotes": {
-    "BNB": {
-      "price_usd": 613.2,
-      "percent_change_7d": -6.8,
-      "rsi_14": 36.4
-    }
-  },
-  "narratives": [
-    {
-      "tag": "DeFi",
-      "strength_score": 0.78,
-      "related_assets": ["BNB", "CAKE", "AAVE", "UNI"]
-    }
-  ],
-  "derivatives": {
-    "funding_rate_bias": "neutral_to_slightly_negative",
-    "liquidation_risk_score": 0.42
-  },
-  "on_chain": {
-    "bnb_chain_active_addresses_7d_change_pct": 5.6
-  },
-  "dex_security_liquidity": {
-    "bnb_chain_screening_required": true
-  }
+  "asset_ids": {"BNB": 1839, "BTC": 1, "ETH": 1027},
+  "primary_asset": "BNB",
+  "quotes": {},
+  "technicals": {},
+  "global_metrics": {},
+  "global_derivatives": {},
+  "upcoming_macro_events": {},
+  "trending_narratives": [],
+  "primary_asset_info": {},
+  "primary_asset_metrics": {},
+  "primary_asset_concept_search": {},
+  "primary_asset_news": [],
+  "marketcap_technical_analysis": {}
 }
 ```
 
+## Failure Behavior
+
+The collector exits with a clear message when:
+
+- No CMC key is available.
+- The MCP server cannot be reached.
+- `tools/list` is missing an expected tool.
+- A requested symbol cannot be resolved.
+- The primary asset is not included in `--assets`.
+
+This behavior is intentional because the current project is designed to demonstrate a real live CMC MCP pipeline.
+
 ## Security
 
-Never commit API keys. The collector reads `CMC_API_KEY` only from the environment.
+- Keys are read only from environment variables.
+- `.env` is ignored by `.gitignore`.
+- No script prints the key value.
+- CMC MCP is used for read-only market data; it does not execute trades.

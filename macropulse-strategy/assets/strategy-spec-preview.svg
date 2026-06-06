@@ -19,14 +19,14 @@
 
   <rect x="64" y="140" width="560" height="510" rx="14" fill="#172033" stroke="#314158"/>
   <text x="94" y="180" class="panel-title">fear-rebound-bnb.yaml</text>
-  <text x="94" y="222" class="code"><tspan class="key">strategy.name:</tspan> <tspan class="value">fear_rebound_bnb_dca</tspan></text>
+  <text x="94" y="222" class="code"><tspan class="key">strategy.name:</tspan> <tspan class="value">live_cmc_fear_rebound_dca</tspan></text>
   <text x="94" y="250" class="code"><tspan class="key">template:</tspan> <tspan class="value">Fear Rebound DCA</tspan></text>
-  <text x="94" y="292" class="code"><tspan class="key">market_regime.label:</tspan> <tspan class="value">extreme_fear_rebound</tspan></text>
-  <text x="94" y="320" class="code"><tspan class="key">evidence:</tspan> <tspan class="value">8 categories</tspan></text>
+  <text x="94" y="292" class="code"><tspan class="key">market_regime.label:</tspan> <tspan class="value">live_cmc_regime</tspan></text>
+  <text x="94" y="320" class="code"><tspan class="key">evidence:</tspan> <tspan class="value">9 CMC MCP categories</tspan></text>
   <text x="94" y="362" class="code"><tspan class="key">entry.all:</tspan></text>
   <text x="124" y="390" class="code">- cmc_fear_greed_lte: <tspan class="value">30</tspan></text>
-  <text x="124" y="418" class="code">- bnb_rsi_14_lte: <tspan class="value">40</tspan></text>
-  <text x="124" y="446" class="code">- news_macro_sentiment_gte: <tspan class="value">-0.35</tspan></text>
+  <text x="124" y="418" class="code">- primary_rsi14_lte: <tspan class="value">42</tspan></text>
+  <text x="124" y="446" class="code">- global_market_cap_7d_lte: <tspan class="value">-5</tspan></text>
   <text x="94" y="488" class="code"><tspan class="key">risk:</tspan></text>
   <text x="124" y="516" class="code">max_position_pct: <tspan class="value">20</tspan></text>
   <text x="124" y="544" class="code">stop_loss_pct: <tspan class="value">5</tspan></text>
@@ -35,8 +35,8 @@
 
   <rect x="676" y="140" width="540" height="154" rx="14" fill="#213047" stroke="#73c2fb"/>
   <text x="708" y="180" class="panel-title">CMC evidence</text>
-  <text x="708" y="214" class="copy">Agent Hub routing, fear and greed, global metrics, quotes, technicals, narratives, derivatives, on-chain, DEX security.</text>
-  <text x="708" y="254" class="code">MCP + REST + Skills + x402 plan</text>
+  <text x="708" y="214" class="copy">CMC MCP tools/list, fear and greed, global metrics, quotes, technicals, narratives, derivatives, macro events, latest news.</text>
+  <text x="708" y="254" class="code">live MCP + quote-only extensions</text>
 
   <rect x="676" y="326" width="540" height="154" rx="14" fill="#243827" stroke="#8de58b"/>
   <text x="708" y="366" class="panel-title">Validation gate</text>

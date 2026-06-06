@@ -1,13 +1,12 @@
 flowchart LR
-    A["Macro News Service"] --> B["News Signal Extractor"]
-    C["CoinMarketCap Agent Hub MCP / REST / x402"] --> D["CMC Market Collector"]
-    M["CMC Skills Marketplace Routing"] --> D
-    B --> E["Market Regime Classifier"]
-    D --> E
+    A["CMC MCP initialize + tools/list"] --> B["Live CMC MCP Collector"]
+    C["12 CMC MCP Tools"] --> B
+    B --> D["Normalized Market Snapshot"]
+    D --> E["Market Regime Classifier"]
     E --> F["Strategy Template Selector"]
     F --> G["Strategy Spec Generator"]
     G --> H["Schema and Risk Validator"]
-    H --> I["Replay Backtest"]
+    H --> I["CMC Performance Replay"]
     I --> J["Final Strategy Output"]
     J --> K["Trust Wallet Quote-Only Plan"]
     J --> L["BNB Agent SDK ERC-8004 / ERC-8183 Manifest"]

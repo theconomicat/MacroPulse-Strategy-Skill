@@ -4,7 +4,7 @@ Target length: 2 minutes.
 
 ## 0:00 - Positioning
 
-MacroPulse is a BNB Hack Track 2 Strategy Skill. It is not a trading bot. It generates validated, backtestable crypto strategy specs from CoinMarketCap Agent Hub data, macro news signals, and risk rules.
+MacroPulse is a BNB Hack Track 2 Strategy Skill. It is not a trading bot. It generates validated, backtestable crypto strategy specs from live CoinMarketCap MCP data and risk rules.
 
 Show:
 
@@ -12,24 +12,27 @@ Show:
 tree -L 3
 ```
 
-## 0:20 - CMC Agent Hub Routing
+## 0:20 - CMC MCP Live Collection
 
-Show that the project knows how it would route CMC MCP, REST, Skills Marketplace, and x402 sources.
+Show that the key is local and not committed, then collect live CMC MCP data:
 
 ```bash
-python macropulse-strategy/scripts/cmc_agent_hub_plan.py --output /tmp/macropulse-demo/cmc-agent-hub-plan.json
+set -a
+. ./.env
+set +a
+python3 macropulse-strategy/scripts/collect_cmc_data.py --assets BNB,BTC,ETH --primary BNB --output /tmp/macropulse-demo/live-cmc.json
 ```
 
 Open the JSON and point to:
 
-- MCP endpoint
-- tool routing categories
-- x402 plan-only guardrail
+- `source_mode: live_cmc_mcp`
+- `mcp.tools_used`
+- quotes, technicals, global metrics, derivatives, macro events, latest news, and narratives
 
 ## 0:45 - Generate Strategy
 
 ```bash
-python macropulse-strategy/scripts/generate_strategy.py --demo --output /tmp/macropulse-demo/fear-rebound.yaml
+python3 macropulse-strategy/scripts/generate_strategy.py --cmc-snapshot /tmp/macropulse-demo/live-cmc.json --output /tmp/macropulse-demo/fear-rebound.yaml
 ```
 
 Show:
@@ -37,14 +40,14 @@ Show:
 - strategy metadata
 - asset universe
 - market regime
-- CMC evidence
+- CMC MCP evidence
 - entry, position sizing, exit, and risk
 
 ## 1:10 - Validate and Replay
 
 ```bash
-python macropulse-strategy/scripts/validate_strategy.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
-python macropulse-strategy/scripts/backtest_strategy.py --strategy /tmp/macropulse-demo/fear-rebound.yaml --demo
+python3 macropulse-strategy/scripts/validate_strategy.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
+python3 macropulse-strategy/scripts/backtest_strategy.py --strategy /tmp/macropulse-demo/fear-rebound.yaml --cmc-snapshot /tmp/macropulse-demo/live-cmc.json
 ```
 
 Point out:
@@ -58,9 +61,9 @@ Point out:
 ## 1:35 - Sponsor Extension Artifacts
 
 ```bash
-python macropulse-strategy/scripts/twak_quote_plan.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
-python macropulse-strategy/scripts/x402_data_plan.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
-python macropulse-strategy/scripts/bnb_agent_manifest.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
+python3 macropulse-strategy/scripts/twak_quote_plan.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
+python3 macropulse-strategy/scripts/x402_data_plan.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
+python3 macropulse-strategy/scripts/bnb_agent_manifest.py --strategy /tmp/macropulse-demo/fear-rebound.yaml
 ```
 
 Explain:
@@ -71,4 +74,4 @@ Explain:
 
 ## 1:55 - Close
 
-MacroPulse packages CMC market intelligence into an auditable strategy compiler for AI agents: data collection, regime detection, strategy generation, validation, replay, and safe integration plans.
+MacroPulse packages live CMC market intelligence into an auditable strategy compiler for AI agents: data collection, regime detection, strategy generation, validation, replay, and safe integration plans.

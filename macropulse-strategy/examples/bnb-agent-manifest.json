@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-06T11:36:40.221880+00:00",
+  "generated_at": "2026-06-06T12:41:07.892678+00:00",
   "mode": "manifest_only_no_onchain_registration",
   "bnb_agent_sdk": {
     "uses": [
@@ -41,8 +41,8 @@
   },
   "erc8183_deliverable": {
     "job_type": "strategy_spec_generation",
-    "strategy_name": "fear_rebound_bnb_dca",
-    "deliverable_hash_sha256": "e2287c69782ed7ff69730e570359d7415e8e4a7fc7c4968d80205d71d25b515e",
+    "strategy_name": "live_cmc_fear_rebound_dca",
+    "deliverable_hash_sha256": "84b6067e4551f03f2f175fa3175c1fc4a2d3ecec80e54993279b7bf97ad4ed9b",
     "expected_artifacts": [
       "strategy.yaml",
       "validation.txt",

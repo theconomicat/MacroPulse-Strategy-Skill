@@ -7,23 +7,23 @@ MacroPulse emits YAML or JSON strategy specs. The schema is intentionally simple
 | Field | Type | Purpose |
 |---|---|---|
 | `strategy` | object | Metadata: `name`, `version`, `template`, `generated_at`, and objective. |
-| `asset_universe` | object | Tradable research universe and liquidity/security filters. |
+| `asset_universe` | object | Research universe and liquidity/security filters. |
 | `market_regime` | object | Deterministic regime classification inputs, label, confidence, and fired rules. |
-| `evidence` | array | At least two evidence items from CMC, news, technical, narrative, or classifier sources. |
+| `evidence` | array | At least two evidence items from CMC MCP signal categories or the deterministic classifier. |
 | `entry` | object | Machine-readable entry conditions. Must not be empty. |
 | `position_sizing` | object | Sizing method, allocation slices, target weights, or max position reference. |
 | `execution` | object | Simulation and quote-only execution assumptions. Real execution must be disabled. |
 | `exit` | object | Machine-readable exit, stop, take-profit, or time-stop rules. Must not be empty. |
 | `risk` | object | Required risk limits and cost assumptions. Must not be empty. |
-| `backtest` | object | Replay engine path, data assumptions, interval, and required metrics. |
+| `backtest` | object | Replay engine path, live snapshot requirement, and required metrics. |
 | `disclaimers` | array | Required caveats, including no financial advice and no trade execution. |
 
 ## Required Strategy Metadata
 
 ```yaml
 strategy:
-  name: fear_rebound_bnb_dca
-  version: "1.0.0"
+  name: live_cmc_fear_rebound_dca
+  version: "2.0.0"
   template: Fear Rebound DCA
 ```
 
@@ -57,25 +57,29 @@ risk:
 Each evidence item should include:
 
 ```yaml
-- source: CoinMarketCap fear and greed
-  type: sentiment
+- source: CMC MCP get_global_metrics_latest
+  type: global_market
   data:
-    value: 24
-    classification: Extreme Fear
-  interpretation: Market sentiment is used as a regime input, not as a standalone trade signal.
+    sentiment:
+      fear_greed:
+        current:
+          index: 24
+          value: Extreme Fear
+  interpretation: Global market stress and fear/greed drive regime selection.
 ```
 
 Evidence should be specific enough for a reviewer to understand why a template was selected.
 
-Preferred evidence categories for BNB Hack:
+Preferred evidence categories:
 
-- CMC Agent Hub routing plan
-- CMC Fear and Greed
-- CMC global metrics
-- CMC quotes and technical indicators
-- Macro/news signals
+- CoinMarketCap MCP tools inventory
+- CMC global metrics and fear/greed
+- CMC quotes
+- CMC technical indicators
+- CMC derivatives
 - CMC trending narratives
-- Derivatives, on-chain, and DEX security/liquidity risk
+- CMC macro events and latest CMC news
+- CMC info, metrics, semantic search, and market-cap technical context
 - Deterministic regime classifier
 
 ## Entry and Exit Conditions
@@ -86,17 +90,17 @@ Use simple lists of machine-readable dictionaries:
 entry:
   all:
     - cmc_fear_greed_lte: 30
-    - bnb_rsi_14_lte: 40
-    - news_macro_sentiment_gte: -0.35
+    - primary_rsi14_lte: 42
+    - global_market_cap_7d_change_lte_pct: -5
 
 exit:
   any:
     - take_profit_pct: 12
     - stop_loss_pct: 5
-    - bnb_rsi_14_gte: 68
+    - primary_rsi14_gte: 68
 ```
 
-The validator checks only required structure and risk fields. Semantic checks should be handled by a richer agent workflow or future schema extension.
+The validator checks required structure and risk fields. Semantic checks should be handled by a richer agent workflow or future schema extension.
 
 ## Execution Safety
 

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
   <title id="title">MacroPulse Strategy Skill architecture</title>
-  <desc id="desc">Flow from CoinMarketCap Agent Hub and macro news into strategy generation, validation, replay, and safe integration artifacts.</desc>
+  <desc id="desc">Flow from live CoinMarketCap MCP tools into strategy generation, validation, replay, and safe integration artifacts.</desc>
   <defs>
     <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0%" stop-color="#101820"/>
@@ -30,18 +30,18 @@
 
   <rect x="64" y="152" width="246" height="118" class="box" fill="#243746" stroke="#5cc8ff"/>
   <text x="88" y="188" class="box-title">CMC Agent Hub</text>
-  <text x="88" y="214" class="box-copy">MCP, REST, Skills Marketplace</text>
-  <text x="88" y="237" class="box-copy">Fear/greed, quotes, technicals</text>
-  <text x="88" y="260" class="box-copy">Narratives, derivatives, on-chain</text>
+  <text x="88" y="214" class="box-copy">MCP initialize + tools/list</text>
+  <text x="88" y="237" class="box-copy">12 live read-only tools</text>
+  <text x="88" y="260" class="box-copy">Fear/greed, quotes, technicals</text>
 
   <rect x="64" y="318" width="246" height="94" class="box" fill="#2a3044" stroke="#8bd17c"/>
-  <text x="88" y="354" class="box-title">Macro News Adapter</text>
-  <text x="88" y="380" class="box-copy">Sentiment, topics, risk events</text>
-  <text x="88" y="403" class="box-copy">Asset and narrative mentions</text>
+  <text x="88" y="354" class="box-title">CMC MCP Signals</text>
+  <text x="88" y="380" class="box-copy">Macro events, latest news</text>
+  <text x="88" y="403" class="box-copy">Narratives, derivatives, metrics</text>
 
   <rect x="382" y="220" width="220" height="132" class="box" fill="#293643" stroke="#ffcf5a"/>
-  <text x="410" y="258" class="box-title">Signal Normalizer</text>
-  <text x="410" y="285" class="box-copy">Agent-ready market snapshot</text>
+  <text x="410" y="258" class="box-title">Live Snapshot</text>
+  <text x="410" y="285" class="box-copy">source_mode: live_cmc_mcp</text>
   <text x="410" y="308" class="box-copy">Evidence categories</text>
   <text x="410" y="331" class="box-copy">Risk context</text>
 
@@ -64,7 +64,7 @@
 
   <rect x="974" y="248" width="242" height="92" class="box" fill="#3a3048" stroke="#cba6ff"/>
   <text x="1002" y="284" class="box-title">Replay Backtest</text>
-  <text x="1002" y="310" class="box-copy">Daily OHLCV, fees, slippage</text>
+  <text x="1002" y="310" class="box-copy">Quote horizons, fees, slippage</text>
   <text x="1002" y="333" class="box-copy">Return, drawdown, win rate</text>
 
   <rect x="974" y="374" width="242" height="118" class="box" fill="#3c3128" stroke="#ffb86b"/>

@@ -1,15 +1,14 @@
 # CoinMarketCap Agent Hub Integration
 
-MacroPulse targets the CMC Agent Hub pattern: agent-ready structured data, pre-computed signals, repeatable Skills workflows, and MCP/x402 access paths.
+MacroPulse targets the CMC Agent Hub pattern: agent-ready structured data, MCP tool discovery, repeatable strategy workflows, and optional x402 access planning.
 
 ## Official Surfaces Used
 
 | Surface | MacroPulse Use | Status |
 |---|---|---|
-| CMC MCP | Live structured data access for quotes, technicals, news, holder metrics, trending narratives, and global market data. | Config and live probe supported by `scripts/cmc_agent_hub_plan.py`. |
-| CMC REST API | Fallback direct integration for fear/greed, global metrics, and quotes. | Implemented in `scripts/collect_cmc_data.py`. |
-| CMC Skills Marketplace | Intended routing layer for repeatable market report, token research, and strategy workflows. | Documented and represented in the Agent Hub plan. |
-| CMC x402 | Pay-per-request data access with USDC on Base when no API key is available. | Plan-only guardrails in `scripts/x402_data_plan.py`. |
+| CMC MCP | Live structured data access for quotes, technicals, news, holder metrics, trending narratives, macro events, derivatives, and global market data. | Implemented in `scripts/collect_cmc_data.py`. |
+| CMC Skills Marketplace | Reference pattern for reusable CMC-powered workflows. | Documented and represented in the Agent Hub plan. |
+| CMC x402 | Pay-per-request data access with USDC on Base for external runtimes. | Plan-only guardrails in `scripts/x402_data_plan.py`. |
 
 ## MCP Configuration
 
@@ -31,35 +30,37 @@ Use `CMC_MCP_API_KEY` or `CMC_API_KEY` in the environment. Never commit keys.
 ## Live Probe
 
 ```bash
-python macropulse-strategy/scripts/cmc_agent_hub_plan.py \
+python3 macropulse-strategy/scripts/cmc_agent_hub_plan.py \
   --check-live \
   --output /tmp/cmc-agent-hub-plan.json
 ```
 
-Without a key, the script still emits a complete integration plan. With a key, it attempts `initialize` and `tools/list` against the CMC MCP endpoint.
+With a key, the script attempts `initialize` and `tools/list` against the CMC MCP endpoint and records the result. Without a key, it emits the routing plan and marks the live probe as not attempted.
 
 ## Tool Routing Map
 
-MacroPulse maps CMC Agent Hub data categories into strategy fields:
+MacroPulse maps live CMC MCP tools into strategy fields:
 
-- Quotes -> `asset_universe`, `evidence`, `market_regime`
-- Technical analysis -> `entry`, `exit`, `market_regime`
-- Global market data -> `market_regime`, `risk`
-- Fear and Greed -> `market_regime`, `entry`, `exit`
-- Trending narratives -> `asset_universe`, `entry`, `evidence`
-- News and sentiment -> `market_regime`, `evidence`
-- On-chain and holder data -> `risk`, `asset_universe`
-- Derivatives -> `market_regime`, `risk`, `exit`
-- DEX liquidity and security -> `asset_universe`, `risk`
-- Historical OHLCV -> `backtest`
+- `search_cryptos` -> `asset_universe`, CMC ID resolution
+- `get_crypto_quotes_latest` -> `asset_universe`, `evidence`, `market_regime`, `backtest`
+- `get_crypto_info` -> `evidence`, asset context
+- `get_crypto_metrics` -> `risk`, `asset_universe`, `evidence`
+- `get_crypto_technical_analysis` -> `entry`, `exit`, `market_regime`
+- `get_crypto_latest_news` -> `evidence`, catalyst context
+- `search_crypto_info` -> `evidence`, semantic concept context
+- `get_global_metrics_latest` -> `market_regime`, `risk`
+- `get_global_crypto_derivatives_metrics` -> `market_regime`, `risk`, `exit`
+- `get_upcoming_macro_events` -> `market_regime`, `evidence`
+- `trending_crypto_narratives` -> `asset_universe`, `entry`, `evidence`
+- `get_crypto_marketcap_technical_analysis` -> `market_regime`, broad technical context
 
 ## x402 Plan
 
 MacroPulse does not sign x402 payments. It emits a budgeted request plan:
 
 ```bash
-python macropulse-strategy/scripts/x402_data_plan.py \
-  --strategy /tmp/fear-rebound.yaml \
+python3 macropulse-strategy/scripts/x402_data_plan.py \
+  --strategy /tmp/live-strategy.yaml \
   --max-budget-usdc 0.08
 ```
 
@@ -70,9 +71,9 @@ An external agent runtime can decide whether to fund USDC on Base and execute pa
 Track 2 asks for CMC Skills that generate backtestable trading strategies from market data. This integration makes the CMC path explicit:
 
 ```text
-CMC Agent Hub / MCP / Skills / x402
--> normalized market snapshot
+CMC Agent Hub MCP
+-> live normalized market snapshot
 -> deterministic regime and strategy template
 -> validated strategy spec
--> replay metrics
+-> CMC MCP replay metrics
 ```

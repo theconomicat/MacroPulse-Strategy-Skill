@@ -1,27 +1,28 @@
 # Market Regime Rules
 
-MacroPulse uses deterministic rules to classify market regimes before selecting a strategy template. These rules are intentionally transparent and easy to modify.
+MacroPulse uses deterministic rules to classify market regimes before selecting a strategy template. Rules are deliberately transparent so another AI agent can audit or modify them.
 
 ## Inputs
 
-- CoinMarketCap Fear and Greed value and classification.
-- CoinMarketCap global market cap trend.
-- BTC dominance and BTC dominance change.
-- BNB, BTC, and ETH quotes and technical indicators.
-- Macro news sentiment and risk event score.
-- CoinMarketCap trending narrative strength and related assets.
+- CMC MCP `get_global_metrics_latest`: fear/greed, total market cap trend, BTC dominance, liquidity, and TradFi flow context.
+- CMC MCP `get_crypto_quotes_latest`: BNB/BTC/ETH prices, market cap, volume, and performance horizons.
+- CMC MCP `get_crypto_technical_analysis`: RSI, MACD, moving averages, pivots, and Fibonacci levels.
+- CMC MCP `get_global_crypto_derivatives_metrics`: funding, open interest, and liquidation risk.
+- CMC MCP `get_upcoming_macro_events`: macro calendar and event catalysts.
+- CMC MCP `get_crypto_latest_news`: recent asset-specific news.
+- CMC MCP `trending_crypto_narratives`: market narrative attention.
 
 ## Regime: Extreme Fear Rebound
 
-Use this regime when the market is in panic or post-panic conditions but macro news is no longer deteriorating.
+Use this regime when broad sentiment is weak but technical conditions indicate a potential large-cap rebound setup.
 
 Typical rules:
 
-- `fear_greed_index <= 30`
-- BNB or large-cap RSI is below 40 to 42.
+- CMC fear/greed index is at or below 30.
+- BNB or the primary large-cap RSI is below 40 to 42.
 - Global market cap is down over the last week.
-- Macro sentiment is mixed or improving, not in free fall.
-- No unresolved exchange, bridge, or chain security event blocks new entries.
+- The primary asset must use live CMC quotes and technical analysis.
+- Entry should require a pivot reclaim or stabilization gate.
 
 Preferred template:
 
@@ -29,18 +30,18 @@ Preferred template:
 
 Main risk:
 
-- Extreme fear can persist and become a trend continuation selloff.
+- Extreme fear can persist and become trend continuation.
 
-## Regime: Risk-Off Macro Pressure
+## Regime: Risk-Off MCP Derivatives Pressure
 
-Use this regime when macro risk or regulatory/event risk dominates market behavior.
+Use this regime when market structure or event risk dominates upside potential.
 
 Typical rules:
 
-- News risk event score is elevated.
-- CPI, FOMC, inflation, regulation, liquidation, hack, or insolvency topics are active.
+- Derivatives risk score is elevated.
 - BTC dominance is rising.
-- Fear and Greed is falling or below neutral.
+- Global market cap trend is weak.
+- Macro events or latest CMC news indicate material catalyst risk.
 - New illiquid altcoin entries should be blocked.
 
 Preferred template:
@@ -51,17 +52,17 @@ Main risk:
 
 - Defensive allocation can underperform if the market rapidly returns to risk-on behavior.
 
-## Regime: Narrative Momentum
+## Regime: CMC Narrative Momentum
 
-Use this regime when CMC trending narratives and news narrative signals align.
+Use this regime when CMC trending narratives and asset technicals indicate concentrated attention without extreme derivatives risk.
 
 Typical rules:
 
-- CMC narrative strength is at least 0.75.
-- News narrative mentions confirm the same sector.
-- Related assets pass liquidity and security filters.
-- Macro risk event score is not extreme.
-- Volume change confirms attention and tradability.
+- A CMC trending narrative is available and rising.
+- MACD histogram is not deeply negative.
+- Derivatives risk is below the elevated threshold.
+- Related assets pass liquidity and market-cap filters.
+- CMC latest news and semantic concept search are attached as evidence.
 
 Preferred template:
 
@@ -69,13 +70,13 @@ Preferred template:
 
 Main risk:
 
-- Narrative attention can reverse faster than daily OHLCV replay can react.
+- Narrative attention can reverse quickly, and CMC quote horizons are not a substitute for full market microstructure.
 
 ## Template Selection Priority
 
-1. If macro event risk is high and BTC dominance is rising, select Risk-Off Rotation.
-2. Else if Fear and Greed is at or below 30 and BNB RSI is weak but stabilizing, select Fear Rebound DCA.
-3. Else if CMC narrative strength and news narrative match are strong, select Narrative Momentum.
+1. If derivatives risk is high or BTC dominance is rising sharply, select Risk-Off Rotation.
+2. Else if Fear and Greed is at or below 30 and primary RSI is weak, select Fear Rebound DCA.
+3. Else if CMC narratives are rising and technicals are not deeply bearish, select Narrative Momentum.
 4. Else use the closest conservative template and lower confidence.
 
 ## Explainability Requirement
@@ -84,6 +85,7 @@ The final strategy must expose:
 
 - The regime label.
 - The confidence score.
-- The raw input values used for classification.
+- The selected template.
+- The raw CMC MCP input values used for classification.
 - The fired rules.
-- Evidence items from both market data and news data.
+- Evidence items from multiple CMC MCP signal categories.
