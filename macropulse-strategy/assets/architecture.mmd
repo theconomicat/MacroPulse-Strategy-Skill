@@ -1,6 +1,7 @@
 flowchart LR
     A["Macro News Service"] --> B["News Signal Extractor"]
-    C["CoinMarketCap API or MCP"] --> D["CMC Market Collector"]
+    C["CoinMarketCap Agent Hub MCP / REST / x402"] --> D["CMC Market Collector"]
+    M["CMC Skills Marketplace Routing"] --> D
     B --> E["Market Regime Classifier"]
     D --> E
     E --> F["Strategy Template Selector"]
@@ -9,4 +10,5 @@ flowchart LR
     H --> I["Replay Backtest"]
     I --> J["Final Strategy Output"]
     J --> K["Trust Wallet Quote-Only Plan"]
-    J --> L["BNB Agent SDK Extension"]
+    J --> L["BNB Agent SDK ERC-8004 / ERC-8183 Manifest"]
+    J --> N["x402 Data Access Plan"]

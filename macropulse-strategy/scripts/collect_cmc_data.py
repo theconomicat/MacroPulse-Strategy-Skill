@@ -19,6 +19,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_DIR = SCRIPT_DIR.parent
 DEFAULT_SAMPLE = SKILL_DIR / "examples" / "sample-cmc-snapshot.json"
 CMC_BASE_URL = "https://pro-api.coinmarketcap.com"
+CMC_MCP_URL = "https://mcp.coinmarketcap.com/mcp"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -120,6 +121,11 @@ def collect_live_snapshot(api_key: str, assets: list[str], include: set[str]) ->
         "narratives": [],
         "technical_indicators": {},
         "collector_notes": [],
+        "agent_hub": {
+            "mcp_url": CMC_MCP_URL,
+            "data_surfaces": ["REST"],
+            "precomputed_signal_targets": ["RSI", "MACD", "EMA", "ATR", "Fear & Greed"],
+        },
     }
 
     if "fear-greed" in include or "fear_greed" in include:
@@ -137,18 +143,23 @@ def collect_live_snapshot(api_key: str, assets: list[str], include: set[str]) ->
     if "quotes" in include:
         try:
             symbols = ",".join(assets)
-            payload = cmc_get("/v2/cryptocurrency/quotes/latest", api_key, {"symbol": symbols, "convert": "USD"})
+            payload = cmc_get("/v3/cryptocurrency/quotes/latest", api_key, {"symbol": symbols, "convert": "USD"})
             snapshot["quotes"] = normalize_quote_payload(payload)
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
             errors.append(f"Quotes request failed: {exc}")
 
     if "technicals" in include:
         snapshot["collector_notes"].append(
-            "Technical indicators are represented in the sample snapshot. For live technicals, connect the CoinMarketCap AI Agent Hub/MCP or enrich OHLCV data downstream."
+            "Live REST quotes were collected. For richer pre-computed RSI, MACD, EMA, ATR, use CoinMarketCap Agent Hub/MCP technical analysis tools."
         )
     if "narratives" in include:
         snapshot["collector_notes"].append(
-            "Trending narratives are represented in the sample snapshot. For live narratives, connect the CoinMarketCap AI Agent Hub/MCP narrative data source."
+            "Trending narratives are represented in the sample snapshot. For live narrative pipelines, use CoinMarketCap Agent Hub/MCP or Skills Marketplace routing."
+        )
+    if "mcp-plan" in include:
+        snapshot["agent_hub"]["data_surfaces"].append("MCP")
+        snapshot["collector_notes"].append(
+            f"MCP endpoint configured for Agent Hub workflows: {CMC_MCP_URL}. Use CMC_MCP_API_KEY with scripts/cmc_agent_hub_plan.py --check-live."
         )
 
     if errors:

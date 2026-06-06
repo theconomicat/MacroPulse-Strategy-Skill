@@ -11,6 +11,7 @@ Use MacroPulse Strategy Skill to generate a 7-day BNB strategy from sample macro
 Expected commands:
 
 ```bash
+python macropulse-strategy/scripts/cmc_agent_hub_plan.py --output /tmp/cmc-agent-hub-plan.json
 python macropulse-strategy/scripts/generate_strategy.py --demo --template fear-rebound-dca --output /tmp/fear-rebound.yaml
 python macropulse-strategy/scripts/validate_strategy.py --strategy /tmp/fear-rebound.yaml
 python macropulse-strategy/scripts/backtest_strategy.py --strategy /tmp/fear-rebound.yaml --demo
@@ -65,3 +66,27 @@ export CMC_API_KEY="..."
 python macropulse-strategy/scripts/collect_cmc_data.py --assets BNB,BTC,ETH --output /tmp/cmc-live.json
 python macropulse-strategy/scripts/generate_strategy.py --input macropulse-strategy/examples/sample-news-input.json --cmc-snapshot /tmp/cmc-live.json
 ```
+
+## Full Judge Demo
+
+```text
+Run the complete MacroPulse demo and show every artifact produced for DoraHacks judging.
+```
+
+Expected command:
+
+```bash
+./demo/run_demo.sh /tmp/macropulse-demo
+```
+
+Expected artifacts:
+
+- CMC Agent Hub plan
+- normalized CMC snapshot
+- news signals
+- strategy YAML
+- validation output
+- replay metrics
+- TWAK quote-only plan
+- x402 data plan
+- BNB Agent SDK manifest

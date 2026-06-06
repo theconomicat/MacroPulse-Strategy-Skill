@@ -2,7 +2,7 @@ strategy:
   name: fear_rebound_bnb_dca
   version: 1.0.0
   template: Fear Rebound DCA
-  generated_at: '2026-06-06T11:15:54.513539+00:00'
+  generated_at: '2026-06-06T11:36:27.551528+00:00'
   objective: Create a backtestable crypto strategy specification for research and
     agent review.
 asset_universe:
@@ -34,7 +34,27 @@ market_regime:
   - cmc_narrative_strength_gte_0_76
   - fear_greed_lte_30
   - news_sentiment_not_extreme_negative
+  - template_forced_fear_rebound_dca
+  template_selection_mode: forced_by_cli
 evidence:
+- source: CoinMarketCap Agent Hub routing plan
+  type: agent_hub
+  data:
+    mcp_url: https://mcp.coinmarketcap.com/mcp
+    skills_marketplace: https://coinmarketcap.com/api/skills-marketplace/
+    data_surfaces:
+    - MCP
+    - REST
+    - x402-plan
+    precomputed_signals:
+    - RSI
+    - MACD
+    - EMA
+    - ATR
+    - Fear & Greed
+    normalized_for: agent-ready YAML strategy generation
+  interpretation: Agent Hub/MCP/REST/x402 surfaces define how live data should be
+    routed into this strategy workflow.
 - source: CoinMarketCap fear and greed
   type: sentiment
   data:
@@ -106,6 +126,23 @@ evidence:
     cmc_trending_rank: 2
   interpretation: Narrative strength is used only when liquidity and risk filters
     are present.
+- source: CoinMarketCap derivatives and on-chain risk
+  type: risk_context
+  data:
+    derivatives:
+      funding_rate_bias: neutral_to_slightly_negative
+      liquidation_risk_score: 0.42
+      open_interest_24h_change_pct: -3.2
+    on_chain:
+      bnb_chain_active_addresses_7d_change_pct: 5.6
+      large_wallet_flow_bias: stable
+      exchange_netflow_bias: mild_outflow
+    dex_security_liquidity:
+      bnb_chain_screening_required: true
+      min_liquidity_usd: 2000000
+      blocked_if_honeypot_or_proxy_risk: true
+  interpretation: Derivatives, on-chain, and DEX security context are used as risk
+    gates and future MCP enrichment targets.
 - source: Rule-based regime classifier
   type: classification
   data:
@@ -126,6 +163,8 @@ evidence:
     - cmc_narrative_strength_gte_0_76
     - fear_greed_lte_30
     - news_sentiment_not_extreme_negative
+    - template_forced_fear_rebound_dca
+    template_selection_mode: forced_by_cli
   interpretation: Template selection is deterministic and should be validated before
     final use.
 entry:

@@ -67,6 +67,17 @@ Each evidence item should include:
 
 Evidence should be specific enough for a reviewer to understand why a template was selected.
 
+Preferred evidence categories for BNB Hack:
+
+- CMC Agent Hub routing plan
+- CMC Fear and Greed
+- CMC global metrics
+- CMC quotes and technical indicators
+- Macro/news signals
+- CMC trending narratives
+- Derivatives, on-chain, and DEX security/liquidity risk
+- Deterministic regime classifier
+
 ## Entry and Exit Conditions
 
 Use simple lists of machine-readable dictionaries:

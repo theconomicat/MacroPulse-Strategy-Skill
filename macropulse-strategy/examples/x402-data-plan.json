@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-06-06T11:36:40.211251+00:00",
+  "strategy_name": "fear_rebound_bnb_dca",
+  "mode": "plan_only_no_payment",
+  "x402_context": {
+    "purpose": "Use CMC x402 pay-per-request data access when an agent has USDC on Base and no CMC API key.",
+    "settlement_asset": "USDC",
+    "chain": "Base",
+    "chain_id": 8453,
+    "max_demo_budget_usdc": 0.08
+  },
+  "candidate_requests": [
+    {
+      "name": "latest_quotes",
+      "reason": "Refresh large-cap anchor prices before strategy generation.",
+      "assets": [
+        "BNB",
+        "BTC",
+        "ETH"
+      ],
+      "max_price_usdc": 0.01
+    },
+    {
+      "name": "fear_and_greed",
+      "reason": "Refresh market sentiment regime input.",
+      "max_price_usdc": 0.01
+    },
+    {
+      "name": "technical_analysis",
+      "reason": "Refresh RSI, MACD, EMA, and ATR pre-computed indicators.",
+      "assets": [
+        "BNB",
+        "BTC",
+        "ETH"
+      ],
+      "max_price_usdc": 0.02
+    },
+    {
+      "name": "trending_narratives",
+      "reason": "Refresh narrative momentum and related assets.",
+      "max_price_usdc": 0.02
+    },
+    {
+      "name": "dex_security_liquidity",
+      "reason": "Screen BNB Chain narrative assets before inclusion.",
+      "assets": [],
+      "max_price_usdc": 0.02
+    }
+  ],
+  "guardrails": [
+    "This script does not connect a wallet.",
+    "This script does not sign x402 payments.",
+    "A user or agent runtime must enforce the max budget before any paid request.",
+    "Paid data must still pass strategy validation and risk checks."
+  ]
+}

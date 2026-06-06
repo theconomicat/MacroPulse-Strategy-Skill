@@ -20,6 +20,7 @@ export MACROPULSE_SKILL_DIR="/path/to/macropulse-strategy"
 ```
 
 1. Data collection
+   - Build or review the CMC Agent Hub routing plan with `scripts/cmc_agent_hub_plan.py`.
    - Collect macro news signals with `scripts/extract_news_signals.py`.
    - Collect CoinMarketCap market context with `scripts/collect_cmc_data.py`.
    - Use demo/sample files when live credentials are unavailable.
@@ -41,6 +42,8 @@ export MACROPULSE_SKILL_DIR="/path/to/macropulse-strategy"
 7. Final report
    - Return the strategy spec, evidence summary, validation result, replay metrics, risk limits, assumptions, and caveats.
    - Optionally produce a Trust Wallet Agent Kit quote-only plan with `scripts/twak_quote_plan.py`.
+   - Optionally produce an x402 data access plan with `scripts/x402_data_plan.py`.
+   - Optionally produce a BNB Agent SDK service manifest with `scripts/bnb_agent_manifest.py`.
 
 ## Skill Rules
 
@@ -62,6 +65,9 @@ python "$MACROPULSE_SKILL_DIR/scripts/generate_strategy.py" --demo --output /tmp
 python "$MACROPULSE_SKILL_DIR/scripts/validate_strategy.py" --strategy /tmp/fear-rebound.yaml
 python "$MACROPULSE_SKILL_DIR/scripts/backtest_strategy.py" --strategy /tmp/fear-rebound.yaml --demo
 python "$MACROPULSE_SKILL_DIR/scripts/twak_quote_plan.py" --strategy /tmp/fear-rebound.yaml
+python "$MACROPULSE_SKILL_DIR/scripts/cmc_agent_hub_plan.py" --output /tmp/cmc-agent-hub-plan.json
+python "$MACROPULSE_SKILL_DIR/scripts/x402_data_plan.py" --strategy /tmp/fear-rebound.yaml
+python "$MACROPULSE_SKILL_DIR/scripts/bnb_agent_manifest.py" --strategy /tmp/fear-rebound.yaml
 ```
 
 Repository root form:
@@ -71,6 +77,9 @@ python macropulse-strategy/scripts/generate_strategy.py --demo --output /tmp/fea
 python macropulse-strategy/scripts/validate_strategy.py --strategy /tmp/fear-rebound.yaml
 python macropulse-strategy/scripts/backtest_strategy.py --strategy /tmp/fear-rebound.yaml --demo
 python macropulse-strategy/scripts/twak_quote_plan.py --strategy /tmp/fear-rebound.yaml
+python macropulse-strategy/scripts/cmc_agent_hub_plan.py --output /tmp/cmc-agent-hub-plan.json
+python macropulse-strategy/scripts/x402_data_plan.py --strategy /tmp/fear-rebound.yaml
+python macropulse-strategy/scripts/bnb_agent_manifest.py --strategy /tmp/fear-rebound.yaml
 ```
 
 ## References
@@ -78,5 +87,7 @@ python macropulse-strategy/scripts/twak_quote_plan.py --strategy /tmp/fear-rebou
 - `references/strategy-schema.md` describes the YAML/JSON strategy contract.
 - `references/market-regime-rules.md` describes regime classification rules.
 - `references/cmc-data-sources.md` describes CoinMarketCap data sources and live/demo behavior.
+- `references/cmc-agent-hub-integration.md` describes CMC MCP, Skills Marketplace, and x402 routing.
 - `references/risk-model.md` describes sizing, stop loss, drawdown, fee, and slippage assumptions.
+- `references/twak-bnb-extension.md` describes quote-only TWAK and manifest-only BNB Agent SDK extensions.
 - `references/demo-prompts.md` contains judge-friendly prompts.

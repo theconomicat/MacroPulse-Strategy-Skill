@@ -1,6 +1,13 @@
 {
   "snapshot_time": "2026-06-06T00:00:00Z",
   "source_mode": "sample",
+  "agent_hub": {
+    "mcp_url": "https://mcp.coinmarketcap.com/mcp",
+    "skills_marketplace": "https://coinmarketcap.com/api/skills-marketplace/",
+    "data_surfaces": ["MCP", "REST", "x402-plan"],
+    "precomputed_signals": ["RSI", "MACD", "EMA", "ATR", "Fear & Greed"],
+    "normalized_for": "agent-ready YAML strategy generation"
+  },
   "fear_greed": {
     "value": 24,
     "value_classification": "Extreme Fear",
@@ -93,5 +100,20 @@
       "impact": "medium",
       "latest_signal": "restrictive_policy_risk"
     }
-  ]
+  ],
+  "derivatives": {
+    "funding_rate_bias": "neutral_to_slightly_negative",
+    "liquidation_risk_score": 0.42,
+    "open_interest_24h_change_pct": -3.2
+  },
+  "on_chain": {
+    "bnb_chain_active_addresses_7d_change_pct": 5.6,
+    "large_wallet_flow_bias": "stable",
+    "exchange_netflow_bias": "mild_outflow"
+  },
+  "dex_security_liquidity": {
+    "bnb_chain_screening_required": true,
+    "min_liquidity_usd": 2000000,
+    "blocked_if_honeypot_or_proxy_risk": true
+  }
 }

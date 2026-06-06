@@ -1,0 +1,142 @@
+{
+  "generated_at": "2026-06-06T11:36:27.389596+00:00",
+  "integration": "CoinMarketCap Agent Hub",
+  "purpose": "Route CMC MCP, REST, Skills, and x402 data into MacroPulse strategy specs.",
+  "official_capabilities_targeted": {
+    "mcp_server": "https://mcp.coinmarketcap.com/mcp",
+    "rest_base_url": "https://pro-api.coinmarketcap.com",
+    "skills_marketplace": "https://coinmarketcap.com/api/skills-marketplace/",
+    "x402": {
+      "supported": true,
+      "chain_id": 8453,
+      "settlement_asset": "USDC on Base",
+      "mode_in_this_repo": "plan_only_no_payment"
+    }
+  },
+  "mcp_server_config": {
+    "mcpServers": {
+      "cmc-mcp": {
+        "url": "https://mcp.coinmarketcap.com/mcp",
+        "headers": {
+          "X-CMC-MCP-API-KEY": "${CMC_MCP_API_KEY}"
+        }
+      }
+    }
+  },
+  "macro_pulse_tool_routing": [
+    {
+      "category": "quotes",
+      "macro_pulse_use": "BNB/BTC/ETH anchor prices, market cap, volume, and 24h/7d changes.",
+      "strategy_fields": [
+        "evidence",
+        "asset_universe",
+        "market_regime"
+      ]
+    },
+    {
+      "category": "technical_analysis",
+      "macro_pulse_use": "RSI, MACD, EMA, ATR, support/resistance, and breakout/reversal signals.",
+      "strategy_fields": [
+        "entry",
+        "exit",
+        "market_regime"
+      ]
+    },
+    {
+      "category": "global_market_data",
+      "macro_pulse_use": "Total market cap, BTC dominance, ETH dominance, and broad risk appetite.",
+      "strategy_fields": [
+        "market_regime",
+        "risk"
+      ]
+    },
+    {
+      "category": "fear_and_greed",
+      "macro_pulse_use": "Primary sentiment state for fear rebound and risk-on/risk-off switching.",
+      "strategy_fields": [
+        "market_regime",
+        "entry",
+        "exit"
+      ]
+    },
+    {
+      "category": "trending_narratives",
+      "macro_pulse_use": "Narrative momentum ranking and related asset universe construction.",
+      "strategy_fields": [
+        "asset_universe",
+        "entry",
+        "evidence"
+      ]
+    },
+    {
+      "category": "news",
+      "macro_pulse_use": "Macro event and catalyst context for strategy evidence.",
+      "strategy_fields": [
+        "evidence",
+        "market_regime"
+      ]
+    },
+    {
+      "category": "sentiment",
+      "macro_pulse_use": "Social/community sentiment confirmation and divergence checks.",
+      "strategy_fields": [
+        "market_regime",
+        "entry",
+        "risk"
+      ]
+    },
+    {
+      "category": "on_chain",
+      "macro_pulse_use": "Holder, wallet, and flow context for risk and adoption filters.",
+      "strategy_fields": [
+        "risk",
+        "asset_universe",
+        "evidence"
+      ]
+    },
+    {
+      "category": "derivatives",
+      "macro_pulse_use": "Funding, liquidation, and leverage stress checks for risk-off overlays.",
+      "strategy_fields": [
+        "market_regime",
+        "risk",
+        "exit"
+      ]
+    },
+    {
+      "category": "dex_liquidity_security",
+      "macro_pulse_use": "BNB Chain token liquidity and security filters for narrative assets.",
+      "strategy_fields": [
+        "asset_universe",
+        "risk"
+      ]
+    },
+    {
+      "category": "historical_ohlcv",
+      "macro_pulse_use": "Replay/backtest input and walk-forward validation.",
+      "strategy_fields": [
+        "backtest"
+      ]
+    },
+    {
+      "category": "market_pairs",
+      "macro_pulse_use": "Venue, pair concentration, and liquidity distribution checks.",
+      "strategy_fields": [
+        "asset_universe",
+        "risk"
+      ]
+    }
+  ],
+  "agent_hub_workflow": [
+    "Use CMC MCP or Skills Marketplace routing for real-time structured market context.",
+    "Normalize quotes, technicals, fear/greed, narratives, derivatives, on-chain, news, and DEX security into a snapshot.",
+    "Generate a deterministic strategy spec with evidence and risk limits.",
+    "Validate schema/risk before any final answer.",
+    "Run lightweight replay or attach a held-out backtest report.",
+    "Optionally produce TWAK quote-only and BNB Agent SDK service deliverables."
+  ],
+  "live_probe": {
+    "attempted": false,
+    "reason": "Run with --check-live and CMC_MCP_API_KEY to probe initialize/tools-list."
+  }
+}

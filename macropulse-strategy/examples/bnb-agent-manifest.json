@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-06-06T11:36:40.221880+00:00",
+  "mode": "manifest_only_no_onchain_registration",
+  "bnb_agent_sdk": {
+    "uses": [
+      "ERC-8004 Agent Identity profile metadata",
+      "ERC-8183 strategy deliverable packaging"
+    ],
+    "not_performed_by_this_script": [
+      "private key loading",
+      "wallet signing",
+      "on-chain registration",
+      "escrow funding",
+      "payment settlement"
+    ]
+  },
+  "erc8004_profile": {
+    "name": "MacroPulse Strategy Skill",
+    "description": "Produces validated, backtestable crypto strategy specs from CMC Agent Hub data, macro news, and risk rules.",
+    "service_url": "https://github.com/theconomicat/MacroPulse-Strategy-Skill",
+    "protocols": [
+      "agent-skill",
+      "strategy-spec",
+      "backtest-report"
+    ],
+    "supported_outputs": [
+      "YAML strategy spec",
+      "JSON validation report",
+      "JSON replay metrics",
+      "TWAK quote-only plan"
+    ],
+    "metadata": {
+      "track": "BNB Hack Track 2 Strategy Skills",
+      "primary_assets": [
+        "BNB",
+        "BTC",
+        "ETH"
+      ],
+      "no_trade_execution": true
+    }
+  },
+  "erc8183_deliverable": {
+    "job_type": "strategy_spec_generation",
+    "strategy_name": "fear_rebound_bnb_dca",
+    "deliverable_hash_sha256": "e2287c69782ed7ff69730e570359d7415e8e4a7fc7c4968d80205d71d25b515e",
+    "expected_artifacts": [
+      "strategy.yaml",
+      "validation.txt",
+      "backtest.json",
+      "cmc-agent-hub-plan.json",
+      "twak-quote-plan.txt"
+    ],
+    "acceptance_criteria": [
+      "strategy validates successfully",
+      "entry, exit, risk, and position_sizing are non-empty",
+      "risk.max_position_pct, risk.stop_loss_pct, and risk.max_drawdown_pct are present",
+      "evidence includes CMC and news signals",
+      "no trade execution code is included"
+    ]
+  }
+}

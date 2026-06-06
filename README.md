@@ -49,6 +49,7 @@ macropulse-strategy/SKILL.md
 
 - Demo mode with no API key.
 - CoinMarketCap live collector with `CMC_API_KEY` environment variable.
+- CoinMarketCap Agent Hub plan for MCP, Skills Marketplace, REST, and x402 routing.
 - News signal extractor with sample and future HTTP adapter modes.
 - Three strategy templates:
   - Fear Rebound DCA
@@ -58,6 +59,8 @@ macropulse-strategy/SKILL.md
 - Schema and risk validation.
 - Lightweight OHLCV replay with fee and slippage assumptions.
 - Trust Wallet Agent Kit quote-only plan output.
+- BNB Agent SDK ERC-8004/ERC-8183 manifest output.
+- One-command demo script for judges.
 - Clear no-financial-advice and no-trade-execution constraints.
 
 ## Architecture
@@ -65,7 +68,8 @@ macropulse-strategy/SKILL.md
 ```mermaid
 flowchart LR
     A["Macro News Service"] --> B["News Signal Extractor"]
-    C["CoinMarketCap API or MCP"] --> D["CMC Market Collector"]
+    C["CoinMarketCap Agent Hub MCP / REST / x402"] --> D["CMC Market Collector"]
+    M["CMC Skills Marketplace Routing"] --> D
     B --> E["Market Regime Classifier"]
     D --> E
     E --> F["Strategy Template Selector"]
@@ -74,7 +78,8 @@ flowchart LR
     H --> I["Replay Backtest"]
     I --> J["Final Strategy Output"]
     J --> K["Trust Wallet Quote-Only Plan"]
-    J --> L["BNB Agent SDK Extension"]
+    J --> L["BNB Agent SDK ERC-8004 / ERC-8183 Manifest"]
+    J --> N["x402 Data Access Plan"]
 ```
 
 The Mermaid source is also stored at `macropulse-strategy/assets/architecture.mmd`.
@@ -92,6 +97,18 @@ MacroPulse is designed around CoinMarketCap market context:
 - Trending narratives.
 - Future MCP/AI Agent Hub enrichment for historical and narrative data.
 
+The project now includes a CMC Agent Hub plan that maps MCP, REST, Skills Marketplace, and x402 into strategy fields:
+
+```bash
+python macropulse-strategy/scripts/cmc_agent_hub_plan.py --output /tmp/cmc-agent-hub-plan.json
+```
+
+With `CMC_MCP_API_KEY` or `CMC_API_KEY`, it can also probe the MCP endpoint:
+
+```bash
+python macropulse-strategy/scripts/cmc_agent_hub_plan.py --check-live
+```
+
 The live REST collector attempts CMC endpoints when `CMC_API_KEY` is set. Without a key, it falls back to `examples/sample-cmc-snapshot.json`.
 
 ### Trust Wallet Agent Kit
@@ -99,6 +116,7 @@ The live REST collector attempts CMC endpoints when `CMC_API_KEY` is set. Withou
 The project includes `scripts/twak_quote_plan.py`, which converts a strategy spec into quote-only commands such as:
 
 ```bash
+npx @trustwallet/cli --version
 twak price BNB
 twak swap 100 USDC BNB --quote-only
 twak alert create --token BNB --above 686.7840
@@ -109,7 +127,15 @@ It never executes swaps, transfers, approvals, or wallet actions.
 
 ### BNB Agent SDK
 
-The current repository documents an extension point for the BNB Agent SDK. A future deployment can register MacroPulse as an agent service that produces strategy deliverables, with the strategy YAML and replay metrics attached as job outputs. The MVP intentionally keeps settlement and execution outside this repository.
+The repository includes `scripts/bnb_agent_manifest.py`, which emits a manifest for BNB Agent SDK ERC-8004 identity metadata and ERC-8183-style deliverable packaging:
+
+```bash
+python macropulse-strategy/scripts/bnb_agent_manifest.py \
+  --strategy /tmp/fear-rebound.yaml \
+  --output /tmp/bnb-agent-manifest.json
+```
+
+This is manifest-only. It does not load private keys, register on-chain, fund escrow, or settle payments.
 
 ## Repository Structure
 
@@ -118,15 +144,21 @@ The current repository documents an extension point for the BNB Agent SDK. A fut
 +-- README.md
 +-- LICENSE
 +-- requirements.txt
++-- demo/
+    +-- run_demo.sh
+    +-- demo-video-script.md
 +-- macropulse-strategy/
     +-- SKILL.md
     +-- scripts/
     |   +-- collect_cmc_data.py
+    |   +-- cmc_agent_hub_plan.py
     |   +-- extract_news_signals.py
     |   +-- generate_strategy.py
     |   +-- validate_strategy.py
     |   +-- backtest_strategy.py
     |   +-- twak_quote_plan.py
+    |   +-- x402_data_plan.py
+    |   +-- bnb_agent_manifest.py
     +-- references/
     +-- examples/
     +-- assets/
@@ -150,9 +182,36 @@ python macropulse-strategy/scripts/generate_strategy.py --demo --output /tmp/fea
 python macropulse-strategy/scripts/validate_strategy.py --strategy /tmp/fear-rebound.yaml
 python macropulse-strategy/scripts/backtest_strategy.py --strategy /tmp/fear-rebound.yaml --demo
 python macropulse-strategy/scripts/twak_quote_plan.py --strategy /tmp/fear-rebound.yaml
+python macropulse-strategy/scripts/cmc_agent_hub_plan.py --output /tmp/cmc-agent-hub-plan.json
+python macropulse-strategy/scripts/x402_data_plan.py --strategy /tmp/fear-rebound.yaml
+python macropulse-strategy/scripts/bnb_agent_manifest.py --strategy /tmp/fear-rebound.yaml
 ```
 
 If your shell has no `python` command before activation, use `python3` for the venv creation step.
+
+## Judge Demo
+
+Run the complete demo pipeline:
+
+```bash
+./demo/run_demo.sh /tmp/macropulse-demo
+```
+
+Artifacts:
+
+```text
+/tmp/macropulse-demo/cmc-agent-hub-plan.json
+/tmp/macropulse-demo/cmc-snapshot.json
+/tmp/macropulse-demo/news-signals.json
+/tmp/macropulse-demo/fear-rebound.yaml
+/tmp/macropulse-demo/validation.txt
+/tmp/macropulse-demo/backtest.json
+/tmp/macropulse-demo/twak-quote-plan.txt
+/tmp/macropulse-demo/x402-data-plan.json
+/tmp/macropulse-demo/bnb-agent-manifest.json
+```
+
+The demo video script is in `demo/demo-video-script.md`.
 
 ## Running in Demo Mode
 
@@ -207,6 +266,39 @@ python macropulse-strategy/scripts/generate_strategy.py \
 ```
 
 If the key is missing or live requests fail, the collector prints a clear message and uses the sample snapshot instead.
+
+## CoinMarketCap Agent Hub / MCP / x402
+
+MacroPulse aligns with CMC Agent Hub by treating CMC as the data and capability layer, not just a raw JSON API.
+
+MCP config:
+
+```json
+{
+  "mcpServers": {
+    "cmc-mcp": {
+      "url": "https://mcp.coinmarketcap.com/mcp",
+      "headers": {
+        "X-CMC-MCP-API-KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+Generate the routing plan:
+
+```bash
+python macropulse-strategy/scripts/cmc_agent_hub_plan.py
+```
+
+Generate an x402 no-payment plan:
+
+```bash
+python macropulse-strategy/scripts/x402_data_plan.py --strategy /tmp/fear-rebound.yaml
+```
+
+MacroPulse does not sign x402 payments. It emits request categories, budget guardrails, and acceptance checks so a separate agent runtime can decide whether to pay for CMC data.
 
 ## Example Prompts
 
@@ -322,6 +414,16 @@ python macropulse-strategy/scripts/twak_quote_plan.py --strategy /tmp/fear-rebou
 
 The output includes quote-only commands and an approval checklist. It does not call TWAK directly and does not execute transactions.
 
+## x402 Data Plan
+
+```bash
+python macropulse-strategy/scripts/x402_data_plan.py \
+  --strategy /tmp/fear-rebound.yaml \
+  --max-budget-usdc 0.08
+```
+
+This produces a no-payment plan for CMC pay-per-request data access over x402. It is useful when an agent has USDC on Base but no CMC API key.
+
 ## BNB Agent SDK Extension
 
 Future work can wrap the skill as a BNB Chain agent service:
@@ -330,6 +432,12 @@ Future work can wrap the skill as a BNB Chain agent service:
 - Expose strategy generation as a job.
 - Attach strategy YAML, validation output, replay metrics, and evidence as deliverables.
 - Keep real execution separate from this strategy skill.
+
+Generate the manifest-only extension artifact:
+
+```bash
+python macropulse-strategy/scripts/bnb_agent_manifest.py --strategy /tmp/fear-rebound.yaml
+```
 
 ## Risk Model
 

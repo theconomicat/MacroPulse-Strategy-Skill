@@ -162,6 +162,12 @@ def build_evidence(cmc: dict[str, Any], news_signals: dict[str, Any], regime: di
     narrative = strongest_narrative(cmc)
     return [
         {
+            "source": "CoinMarketCap Agent Hub routing plan",
+            "type": "agent_hub",
+            "data": cmc.get("agent_hub", {}),
+            "interpretation": "Agent Hub/MCP/REST/x402 surfaces define how live data should be routed into this strategy workflow.",
+        },
+        {
             "source": "CoinMarketCap fear and greed",
             "type": "sentiment",
             "data": {
@@ -212,6 +218,16 @@ def build_evidence(cmc: dict[str, Any], news_signals: dict[str, Any], regime: di
             "type": "narrative",
             "data": narrative,
             "interpretation": "Narrative strength is used only when liquidity and risk filters are present.",
+        },
+        {
+            "source": "CoinMarketCap derivatives and on-chain risk",
+            "type": "risk_context",
+            "data": {
+                "derivatives": cmc.get("derivatives", {}),
+                "on_chain": cmc.get("on_chain", {}),
+                "dex_security_liquidity": cmc.get("dex_security_liquidity", {}),
+            },
+            "interpretation": "Derivatives, on-chain, and DEX security context are used as risk gates and future MCP enrichment targets.",
         },
         {
             "source": "Rule-based regime classifier",
